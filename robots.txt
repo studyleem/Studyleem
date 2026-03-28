@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /login/
+Disallow: /dashboard/
+Disallow: /config/
+Disallow: /includes/
+Disallow: /tmp/
+Disallow: /private/
+
+Sitemap: https://studyleem.free.nf/sitemap.xml
