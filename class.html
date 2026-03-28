@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1372125039445576"
-     crossorigin="anonymous"></script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNNDTM33RB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZNNDTM33RB');
+    </script>
+    <meta name="google-site-verification" content="E6t2S97guY5wt76RUQY_xrUMGnhvL3iAMk9HXcEHwBs" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Class - StudyLeem</title>
-    <meta name="description" content="Browse free FBISE study materials, notes and textbooks for your class. Federal Board Pakistan.">
-    <meta name="keywords" content="FBISE class notes, fbise class 9 notes, Federal Board Pakistan, Class 9 subjects, Class 10 subjects, Class 11 subjects, Class 12 subjects, free study materials, SSC HSSC notes">
-    <link rel="stylesheet" href="/styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Class Materials - FBISE | StudyLeem</title>
+    <meta name="description" content="Download FBISE books and notes for all subjects">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNNDTM33RB"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -19,114 +25,148 @@
       gtag('js', new Date());
       gtag('config', 'G-ZNNDTM33RB');
     </script>
+    
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
+    <div class="header">
         <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <a href="/home" style="display: flex; align-items: center; gap: 0.5rem;">
-                        <img src="/logo.png" alt="StudyLeem Logo" style="height: 50px;">
-                        <div class="logo-text">
-                            <span style="color: #1f2937;">Study</span><span style="color: #2563eb;">Leem</span>
+            <div class="breadcrumb">
+                <a href="/home">Home</a> / Class <span id="classNum">12</span>
+            </div>
+            <h1>📚 Class <span id="classTitle">12</span></h1>
+            <p>Federal Board (FBISE) - All Subjects</p>
+        </div>
+    </div>
+    
+    <div class="loading" id="loading">Loading subjects...</div>
+    
+    <div class="subjects-grid" id="subjectsGrid" style="display: none;"></div>
+    
+    <div class="footer">
+        <p>&copy; 2026 StudyLeem. All rights reserved.</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="/privacy" style="color: #94a3b8; margin: 0 0.5rem;">Privacy</a> |
+            <a href="/terms" style="color: #94a3b8; margin: 0 0.5rem;">Terms</a> |
+            <a href="/about" style="color: #94a3b8; margin: 0 0.5rem;">About</a> |
+            <a href="/contact" style="color: #94a3b8; margin: 0 0.5rem;">Contact</a>
+        </p>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Main JS -->
+    <script src="/main.js"></script>
+    
+    <script>
+        // Get class from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const classNum = urlParams.get('class') || '12';
+        
+        document.getElementById('classNum').textContent = classNum;
+        document.getElementById('classTitle').textContent = classNum;
+        document.title = `Class ${classNum} - FBISE | StudyLeem`;
+        
+        // Load subjects from Firebase
+        async function loadSubjects() {
+            try {
+                const snapshot = await db.collection('materials')
+                    .where('class', '==', classNum)
+                    .get();
+                
+                const subjects = {};
+                snapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    if (!subjects[data.subject]) {
+                        subjects[data.subject] = {
+                            books: 0,
+                            notes: 0
+                        };
+                    }
+                    if (data.type === 'books') subjects[data.subject].books++;
+                    if (data.type === 'notes') subjects[data.subject].notes++;
+                });
+                
+                const grid = document.getElementById('subjectsGrid');
+                grid.innerHTML = '';
+                
+                if (Object.keys(subjects).length === 0) {
+                    grid.innerHTML = '<p style="text-align: center; padding: 2rem; color: #64748b;">No subjects available yet for Class ' + classNum + '</p>';
+                    grid.style.display = 'block';
+                    document.getElementById('loading').style.display = 'none';
+                    return;
+                }
+                
+                Object.keys(subjects).sort().forEach(subject => {
+                    const card = document.createElement('a');
+                    card.className = 'subject-card';
+                    card.href = `/subject?class=${classNum}&subject=${encodeURIComponent(subject)}`;
+                    
+                    const icon = getSubjectIcon(subject);
+                    
+                    card.innerHTML = `
+                        <div class="subject-header">${icon} ${subject}</div>
+                        <div class="subject-body">
+                            <p>Complete study materials for ${subject}</p>
+                            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                ${subjects[subject].books > 0 ? '<span class="badge badge-primary">📚 Books</span>' : ''}
+                                ${subjects[subject].notes > 0 ? '<span class="badge badge-success">📝 Notes</span>' : ''}
+                            </div>
                         </div>
-                    </a>
-                </div>
-                <nav class="nav" aria-label="Main navigation">
-                    <a href="/home" class="nav-link">Home</a>
-                    <a href="/home#classes" class="nav-link active">Classes</a>
-                    <a href="/home#subjects" class="nav-link">Subjects</a>
-                    <a href="/about" class="nav-link">About</a>
-                    <a href="/contact" class="nav-link">Contact</a>
-                    <a href="/terms" class="nav-link">Terms</a>
-                    <a href="/privacy" class="nav-link">Privacy</a>
-                </nav>
-                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
-        <a href="/home" class="mobile-nav-link">Home</a>
-        <a href="/home#classes" class="mobile-nav-link active">Classes</a>
-        <a href="/home#subjects" class="mobile-nav-link">Subjects</a>
-        <a href="/about" class="mobile-nav-link">About</a>
-        <a href="/contact" class="mobile-nav-link">Contact</a>
-        <a href="/terms" class="mobile-nav-link">Terms</a>
-        <a href="/privacy" class="mobile-nav-link">Privacy</a>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Page Header -->
-        <div class="page-header">
-            <div class="container">
-                <h1 id="classTitle">Class Materials</h1>
-            </div>
-        </div>
-
-        <!-- Subjects Section -->
-        <section class="section">
-            <div class="container">
-                <h2 class="section-title">Available Subjects</h2>
-                <div class="subjects-grid" id="subjectsGrid">
-                    <div class="loading">Loading subjects...</div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>StudyLeem</h3>
-                    <p>Your trusted source for free FBISE study materials. Helping students excel in Federal Board examinations.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <div class="footer-links">
-                        <a href="/home">Home</a>
-                        <a href="/home#classes">Classes</a>
-                        <a href="/home#subjects">Subjects</a>
-                        <a href="/contact">Contact</a>
-                        <a href="/admin">Admin Panel</a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <div class="footer-links">
-                        <a href="/terms">Terms of Service</a>
-                        <a href="/privacy">Privacy Policy</a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Resources</h4>
-                    <div class="footer-links">
-                        <a href="/9">Class 9 Materials</a>
-                        <a href="/10">Class 10 Materials</a>
-                        <a href="/11">Class 11 Materials</a>
-                        <a href="/12">Class 12 Materials</a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 StudyLeem. All rights reserved. Empowering Federal Board students.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="/firebase-config.js"></script>
-    <script src="/class.js"></script>
+                    `;
+                    
+                    grid.appendChild(card);
+                });
+                
+                document.getElementById('loading').style.display = 'none';
+                grid.style.display = 'grid';
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').textContent = 'Error loading subjects';
+            }
+        }
+        
+        function getSubjectIcon(subject) {
+            const icons = {
+                'Biology': '🧬',
+                'Chemistry': '🧪',
+                'Physics': '⚛️',
+                'Mathematics': '🔢',
+                'Computer Science': '💻',
+                'English': '📖',
+                'Urdu': '📝',
+                'Islamiat': '☪️',
+                'Pakistan Studies': '🇵🇰'
+            };
+            return icons[subject] || '📚';
+        }
+        
+        // Add badge styles
+        const badgeStyle = document.createElement('style');
+        badgeStyle.textContent = `
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                padding: 0.25rem 0.75rem;
+                font-size: 0.75rem;
+                font-weight: 600;
+                border-radius: 12px;
+            }
+            .badge-primary {
+                background: #e0e7ff;
+                color: #4f46e5;
+            }
+            .badge-success {
+                background: #d1fae5;
+                color: #059669;
+            }
+        `;
+        document.head.appendChild(badgeStyle);
+        
+        loadSubjects();
+    </script>
 </body>
 </html>

@@ -1,312 +1,384 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1372125039445576"
-     crossorigin="anonymous"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - StudyLeem</title>
-    <link rel="stylesheet" href="/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNNDTM33RB"></script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNNDTM33RB"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-ZNNDTM33RB');
     </script>
+    <meta name="google-site-verification" content="E6t2S97guY5wt76RUQY_xrUMGnhvL3iAMk9HXcEHwBs" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - StudyLeem</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* Login Screen Styles */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-section h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .logo-section p {
+            color: #64748b;
+        }
+        
+        #loginError {
+            display: none;
+        }
+        
+        .admin-screen {
+            display: none;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+    </style>
 </head>
-<body class="admin-body">
-    <div id="loginPage" class="admin-login-container">
-        <div class="login-box">
-            <img src="/logo.png" alt="StudyLeem" class="login-logo">
-            <h2>Admin Login</h2>
+<body>
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="logo-section">
+                <h1>🔐 StudyLeem</h1>
+                <p>Admin Panel Login</p>
+            </div>
+            
+            <div id="loginError" class="alert alert-error"></div>
+            
             <form id="loginForm">
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="email" required>
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        placeholder="admin@studyleem.com" 
+                        required
+                        autocomplete="email"
+                    >
                 </div>
+                
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="password" required>
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="Enter your password" 
+                        required
+                        autocomplete="current-password"
+                    >
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
-                <div id="loginError" class="error-message"></div>
+                
+                <button type="submit" class="btn-submit" id="loginBtn" style="width: 100%;">
+                    Login to Admin Panel
+                </button>
             </form>
-            <a href="/home" class="back-link">← Home</a>
+            
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="/home" style="color: #667eea;">← Back to Home</a>
+            </div>
         </div>
     </div>
-
-    <div id="dashboardPage" class="admin-container" style="display:none">
-        <aside class="admin-sidebar" id="adminSidebar">
-            <div class="sidebar-header">
-                <h2>Admin Panel</h2>
-                <button class="sidebar-close" id="sidebarClose">×</button>
-            </div>
-            <nav class="admin-nav">
-                <a href="#" class="admin-nav-link active" data-page="upload">📤 Upload</a>
-                <a href="#" class="admin-nav-link" data-page="manage">📚 Manage</a>
-                <a href="#" class="admin-nav-link" data-page="stats">📊 Stats</a>
-                <a href="#" class="admin-nav-link" data-page="messages">✉️ Messages</a>
-                <a href="#" id="logoutBtn" class="admin-nav-link logout">🚪 Logout</a>
-            </nav>
-        </aside>
-
-        <main class="admin-main">
+    
+    <!-- ADMIN PANEL SCREEN -->
+    <div class="admin-screen" id="adminScreen">
+        <div class="admin-container">
             <div class="admin-header">
-                <button class="mobile-sidebar-toggle" id="sidebarToggle">☰</button>
-                <h1 id="pageTitle">Upload Material</h1>
-            </div>
-
-            <div class="admin-content">
-                <!-- Upload Page -->
-                <div id="uploadPage" class="admin-page active">
-                    <div class="upload-card">
-                        <div class="material-type-selector">
-                            <label class="type-radio">
-                                <input type="radio" name="materialType" value="notes" checked>
-                                <span class="type-label"><span class="type-icon">📝</span><span>Notes</span></span>
-                            </label>
-                            <label class="type-radio">
-                                <input type="radio" name="materialType" value="books">
-                                <span class="type-label"><span class="type-icon">📚</span><span>Books</span></span>
-                            </label>
-                        </div>
-
-                        <form id="uploadForm">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Title*</label>
-                                    <input type="text" id="title" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Class*</label>
-                                    <select id="class" required>
-                                        <option value="">Select</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Subject*</label>
-                                    <input type="text" id="subject" required>
-                                </div>
-                                <div class="form-group" id="chapterGroup">
-                                    <label>Chapter Number*</label>
-                                    <input type="number" id="chapterNumber" min="1">
-                                </div>
-                            </div>
-
-                            <div class="form-group" id="chapterTitleGroup">
-                                <label>Chapter Title*</label>
-                                <input type="text" id="chapterTitle">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Cover Image URL*</label>
-                                <input type="url" id="coverImage" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>PDF Link*</label>
-                                <input type="url" id="pdfLink" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Description*</label>
-                                <textarea id="description" required rows="3"></textarea>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary">
-                                <span id="uploadBtnText">Upload Material</span>
-                            </button>
-                            <div id="uploadStatus"></div>
-                        </form>
-                    </div>
+                <div>
+                    <h1>📚 Admin Panel</h1>
+                    <p id="userEmail">Loading...</p>
                 </div>
-
-                <!-- Manage Page -->
-                <div id="managePage" class="admin-page">
-                    <div class="manage-controls">
-                        <input type="text" id="searchMaterials" placeholder="Search...">
-                        <select id="filterClass">
-                            <option value="">All Classes</option>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+            
+            <div id="alertBox"></div>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>Total Materials</h3>
+                    <div class="value" id="totalMaterials">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Books</h3>
+                    <div class="value" id="totalBooks">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Notes</h3>
+                    <div class="value" id="totalNotes">0</div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Add New Material</h2>
+                <form id="addForm">
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="type" required>
+                            <option value="">Select Type</option>
+                            <option value="books">Book</option>
+                            <option value="notes">Notes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Class</label>
+                        <select id="class" required>
+                            <option value="">Select Class</option>
                             <option value="9">Class 9</option>
                             <option value="10">Class 10</option>
                             <option value="11">Class 11</option>
                             <option value="12">Class 12</option>
                         </select>
-                        <select id="filterType">
-                            <option value="">All Types</option>
-                            <option value="notes">Notes</option>
-                            <option value="books">Books</option>
-                        </select>
                     </div>
-                    <div class="materials-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Cover</th>
-                                    <th>Title</th>
-                                    <th>Type</th>
-                                    <th>Class</th>
-                                    <th>Subject</th>
-                                    <th>Chapter</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="materialsTableBody">
-                                <tr><td colspan="7" class="loading">Loading...</td></tr>
-                            </tbody>
-                        </table>
+                    
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" id="subject" placeholder="e.g., Biology" required>
                     </div>
-                </div>
-
-                <!-- Stats Page -->
-                <div id="statsPage" class="admin-page">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <h3>Total</h3>
-                            <p class="stat-number" id="totalMaterialsStat">0</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Books</h3>
-                            <p class="stat-number" id="totalBooksStat">0</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Notes</h3>
-                            <p class="stat-number" id="totalNotesStat">0</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Class 9</h3>
-                            <p class="stat-number" id="class9Count">0</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Class 10</h3>
-                            <p class="stat-number" id="class10Count">0</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Class 11</h3>
-                            <p class="stat-number" id="class11Count">0</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Class 12</h3>
-                            <p class="stat-number" id="class12Count">0</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Messages Page (new) -->
-                <div id="messagesPage" class="admin-page">
-                    <div class="manage-controls">
-                        <input type="text" id="searchMessages" placeholder="Search messages...">
-                        <select id="filterMessageStatus">
-                            <option value="">All Messages</option>
-                            <option value="unread">Unread</option>
-                            <option value="read">Read</option>
-                        </select>
-                    </div>
-                    <div class="materials-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Status</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Subject</th>
-                                    <th>Preview</th>
-                                    <th>Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="messagesTableBody">
-                                <tr><td colspan="7" class="loading">Loading messages...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Edit Material Modal -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit</h2>
-                <button class="modal-close" id="closeEditModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="editForm">
-                    <input type="hidden" id="editId">
-                    <input type="hidden" id="editType">
+                    
                     <div class="form-group">
                         <label>Title</label>
-                        <input type="text" id="editTitle" required>
+                        <input type="text" id="title" placeholder="e.g., Chapter 1 Notes" required>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Class</label>
-                            <select id="editClass" required>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Subject</label>
-                            <input type="text" id="editSubject" required>
-                        </div>
-                    </div>
-                    <div class="form-row" id="editChapterRow">
-                        <div class="form-group">
-                            <label>Chapter Number</label>
-                            <input type="number" id="editChapterNumber">
-                        </div>
-                        <div class="form-group">
-                            <label>Chapter Title</label>
-                            <input type="text" id="editChapterTitle">
-                        </div>
-                    </div>
+                    
                     <div class="form-group">
-                        <label>Cover Image URL</label>
-                        <input type="url" id="editCoverImage" required>
+                        <label>PDF Link URL</label>
+                        <input type="url" id="pdfUrl" placeholder="https://..." required>
                     </div>
-                    <div class="form-group">
-                        <label>PDF Link</label>
-                        <input type="url" id="editPdfLink" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="editDescription" required rows="3"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    
+                    <button type="submit" class="btn-submit">Add Material</button>
                 </form>
             </div>
-        </div>
-    </div>
-
-    <!-- View Message Modal -->
-    <div id="viewMessageModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Contact Message</h2>
-                <button class="modal-close" id="closeViewMessage">&times;</button>
+            
+            <div class="materials-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Class</th>
+                            <th>Subject</th>
+                            <th>Title</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="materialsBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="modal-body" id="viewMessageBody"></div>
         </div>
     </div>
-
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="/firebase-config.js"></script>
-    <script src="/admin.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Main JS -->
+    <script src="/main.js"></script>
+    
+    <script>
+        // Check authentication
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                // User is logged in - show admin panel
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminScreen').style.display = 'block';
+                document.getElementById('userEmail').textContent = user.email;
+                
+                await loadStats();
+                await loadMaterials();
+            } else {
+                // User not logged in - show login screen
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('adminScreen').style.display = 'none';
+            }
+        });
+        
+        // Handle login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            errorDiv.style.display = 'none';
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                // Will switch screens via onAuthStateChanged
+            } catch (error) {
+                let message = 'Login failed. Please try again.';
+                
+                if (error.code === 'auth/user-not-found') {
+                    message = 'No account found with this email.';
+                } else if (error.code === 'auth/wrong-password') {
+                    message = 'Incorrect password.';
+                } else if (error.code === 'auth/invalid-email') {
+                    message = 'Invalid email address.';
+                }
+                
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Login to Admin Panel';
+            }
+        });
+        
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                auth.signOut();
+            }
+        }
+        
+        function showAlert(message, type = 'success') {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => alertBox.innerHTML = '', 5000);
+        }
+        
+        async function loadStats() {
+            try {
+                const snapshot = await db.collection('materials').get();
+                const materials = snapshot.docs.map(doc => doc.data());
+                
+                document.getElementById('totalMaterials').textContent = materials.length;
+                document.getElementById('totalBooks').textContent = materials.filter(m => m.type === 'books').length;
+                document.getElementById('totalNotes').textContent = materials.filter(m => m.type === 'notes').length;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+        
+        async function loadMaterials() {
+            try {
+                const snapshot = await db.collection('materials').orderBy('createdAt', 'desc').get();
+                const tbody = document.getElementById('materialsBody');
+                
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No materials yet</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = '';
+                snapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${data.type}</td>
+                        <td>Class ${data.class}</td>
+                        <td>${data.subject}</td>
+                        <td>${data.title}</td>
+                        <td>
+                            <button class="btn-delete" onclick="deleteMaterial('${doc.id}')">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error loading materials:', error);
+                showAlert('Failed to load materials', 'error');
+            }
+        }
+        
+        document.getElementById('addForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                type: document.getElementById('type').value,
+                class: document.getElementById('class').value,
+                subject: document.getElementById('subject').value,
+                title: document.getElementById('title').value,
+                pdfUrl: document.getElementById('pdfUrl').value,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            try {
+                await db.collection('materials').add(data);
+                showAlert('Material added successfully!');
+                e.target.reset();
+                await loadStats();
+                await loadMaterials();
+            } catch (error) {
+                console.error('Error adding material:', error);
+                showAlert('Failed to add material: ' + error.message, 'error');
+            }
+        });
+        
+        async function deleteMaterial(id) {
+            if (!confirm('Are you sure you want to delete this material?')) return;
+            
+            try {
+                await db.collection('materials').doc(id).delete();
+                showAlert('Material deleted successfully!');
+                await loadStats();
+                await loadMaterials();
+            } catch (error) {
+                console.error('Error deleting material:', error);
+                showAlert('Failed to delete material: ' + error.message, 'error');
+            }
+        }
+    </script>
 </body>
 </html>
