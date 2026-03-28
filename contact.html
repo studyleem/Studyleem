@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - StudyLeem</title>
+    <meta name="description" content="Get in touch with StudyLeem. We're here to help Federal Board students with their study material needs.">
+    <meta name="keywords" content="contact StudyLeem, FBISE support, Federal Board help, study materials contact">
+    <link rel="canonical" href="https://studyleem.vercel.app/contact">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNNDTM33RB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZNNDTM33RB');
+    </script>
+    <style>
+        .contact-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 3rem;
+            padding: 3rem 1rem;
+        }
+        @media (max-width: 768px) {
+            .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; padding: 2rem 1rem; }
+        }
+        .contact-info-card {
+            background: #f8faff;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid #e8eef8;
+        }
+        .contact-info-card h2 {
+            color: #1f2937;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .contact-info-card p {
+            color: #6b7280;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+        .contact-item-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .contact-item-text h4 {
+            color: #1f2937;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+        .contact-item-text a, .contact-item-text p {
+            color: #2563eb;
+            font-size: 0.9rem;
+            text-decoration: none;
+            margin: 0;
+        }
+        .contact-item-text p { color: #6b7280; }
+        .contact-item-text a:hover { text-decoration: underline; }
+        .contact-form-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .contact-form-card h2 {
+            color: #1f2937;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .contact-form-card .subtitle {
+            color: #6b7280;
+            margin-bottom: 1.75rem;
+            font-size: 0.95rem;
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: #1f2937;
+            background: #fafafa;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+            background: #fff;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+        .submit-btn {
+            width: 100%;
+            padding: 0.85rem;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .submit-btn:hover { background: #1d4ed8; }
+        .submit-btn:active { transform: scale(0.98); }
+        .submit-btn:disabled { background: #93c5fd; cursor: not-allowed; }
+        .form-status {
+            margin-top: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            display: none;
+        }
+        .form-status.success {
+            display: block;
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .form-status.error {
+            display: block;
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .char-count {
+            text-align: right;
+            font-size: 0.78rem;
+            color: #9ca3af;
+            margin-top: 0.2rem;
+        }
+        .faq-section {
+            max-width: 1100px;
+            margin: 0 auto 3rem;
+            padding: 0 1rem;
+        }
+        .faq-section h2 {
+            color: #1f2937;
+            font-size: 1.4rem;
+            margin-bottom: 1.25rem;
+            text-align: center;
+        }
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .faq-item {
+            background: #f8faff;
+            border-radius: 10px;
+            padding: 1.25rem;
+            border: 1px solid #e8eef8;
+        }
+        .faq-item h4 {
+            color: #2563eb;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        .faq-item p {
+            color: #6b7280;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="/home" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <img src="/logo.png" alt="StudyLeem Logo" style="height: 50px;">
+                        <div class="logo-text">
+                            <span style="color: #1f2937;">Study</span><span style="color: #2563eb;">Leem</span>
+                        </div>
+                    </a>
+                </div>
+                <nav class="nav" aria-label="Main navigation">
+                    <a href="/home" class="nav-link">Home</a>
+                    <a href="/home#classes" class="nav-link">Classes</a>
+                    <a href="/home#subjects" class="nav-link">Subjects</a>
+                    <a href="/about" class="nav-link">About</a>
+                    <a href="/contact" class="nav-link active">Contact</a>
+                    <a href="/terms" class="nav-link">Terms</a>
+                    <a href="/privacy" class="nav-link">Privacy</a>
+                </nav>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
+        <a href="/home" class="mobile-nav-link">Home</a>
+        <a href="/home#classes" class="mobile-nav-link">Classes</a>
+        <a href="/home#subjects" class="mobile-nav-link">Subjects</a>
+        <a href="/about" class="mobile-nav-link">About</a>
+        <a href="/contact" class="mobile-nav-link active">Contact</a>
+        <a href="/terms" class="mobile-nav-link">Terms</a>
+        <a href="/privacy" class="mobile-nav-link">Privacy</a>
+    </div>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+        </div>
+    </section>
+
+    <div class="main-content">
+        <div class="contact-wrapper">
+            <!-- Contact Info -->
+            <div class="contact-info-card">
+                <h2>Get in Touch</h2>
+                <p>Have a question about study materials, a suggestion for improvement, or found an issue? We're here to help every Federal Board student succeed.</p>
+
+                <div class="contact-item">
+                    <div class="contact-item-icon">📧</div>
+                    <div class="contact-item-text">
+                        <h4>Email</h4>
+                        <a href="mailto:studyleem@gmail.com">studyleem@gmail.com</a>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-item-icon">🎓</div>
+                    <div class="contact-item-text">
+                        <h4>Classes Covered</h4>
+                        <p>Class 9, 10, 11 &amp; 12 (FBISE)</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-item-icon">⏱️</div>
+                    <div class="contact-item-text">
+                        <h4>Response Time</h4>
+                        <p>Usually within 24–48 hours</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-item-icon">🌍</div>
+                    <div class="contact-item-text">
+                        <h4>Based in</h4>
+                        <p>Pakistan (Federal Board / FBISE)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form-card">
+                <h2>Send a Message</h2>
+                <p class="subtitle">Fill out the form below and we'll get back to you promptly.</p>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contactName">Your Name *</label>
+                        <input type="text" id="contactName" placeholder="e.g. Ahmed Khan" maxlength="80" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email Address *</label>
+                        <input type="email" id="contactEmail" placeholder="you@email.com" maxlength="120" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contactClass">Your Class (optional)</label>
+                        <select id="contactClass">
+                            <option value="">Select class...</option>
+                            <option value="9">Class 9 (SSC Part 1)</option>
+                            <option value="10">Class 10 (SSC Part 2)</option>
+                            <option value="11">Class 11 (HSSC Part 1)</option>
+                            <option value="12">Class 12 (HSSC Part 2)</option>
+                            <option value="other">Other / Not a student</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactSubject">Subject / Topic</label>
+                        <select id="contactSubject">
+                            <option value="general">General Inquiry</option>
+                            <option value="missing-material">Missing Study Material</option>
+                            <option value="broken-link">Broken Link / Error</option>
+                            <option value="suggestion">Suggestion</option>
+                            <option value="copyright">Copyright Concern</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactMessage">Message *</label>
+                    <textarea id="contactMessage" placeholder="Tell us how we can help you..." maxlength="1000" required></textarea>
+                    <div class="char-count"><span id="charCount">0</span>/1000</div>
+                </div>
+
+                <button class="submit-btn" id="submitBtn" onclick="submitContactForm()">
+                    <span id="submitText">✉️ Send Message</span>
+                </button>
+
+                <div class="form-status" id="formStatus"></div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h4>📚 Are all materials free?</h4>
+                    <p>Yes! Every textbook and set of notes on StudyLeem is 100% free for all Federal Board students. No subscriptions or hidden charges.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>📄 How do I download a PDF?</h4>
+                    <p>Click on any material card, then use the "Preview &amp; Download" button. A 15-second timer will start before the download button activates.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>🔍 Can I request missing material?</h4>
+                    <p>Absolutely! Use the contact form above and select "Missing Study Material". We'll try our best to add it as soon as possible.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>🔗 A link isn't working — what do I do?</h4>
+                    <p>Please report it using the form above with the subject "Broken Link / Error". Include the material name and class so we can fix it quickly.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>📱 Does StudyLeem work on mobile?</h4>
+                    <p>Yes, the website is fully responsive and works on all devices — phones, tablets, and desktops.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>🏫 Which board is covered?</h4>
+                    <p>StudyLeem focuses on FBISE (Federal Board of Intermediate and Secondary Education) for Classes 9 to 12.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>StudyLeem</h3>
+                    <p>Your trusted source for free FBISE study materials. Helping students excel in Federal Board examinations.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <div class="footer-links">
+                        <a href="/home">Home</a>
+                        <a href="/home#classes">Classes</a>
+                        <a href="/about">About</a>
+                        <a href="/contact">Contact</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <div class="footer-links">
+                        <a href="/terms">Terms of Service</a>
+                        <a href="/privacy">Privacy Policy</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <div class="footer-links">
+                        <a href="/9">Class 9 Materials</a>
+                        <a href="/10">Class 10 Materials</a>
+                        <a href="/11">Class 11 Materials</a>
+                        <a href="/12">Class 12 Materials</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 StudyLeem. All rights reserved. Empowering Federal Board students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ── Mobile menu ──
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (menuBtn && mobileMenu) {
+            menuBtn.onclick = (e) => { e.stopPropagation(); mobileMenu.classList.toggle('active'); };
+            document.onclick = (e) => {
+                if (!mobileMenu.contains(e.target) && !menuBtn.contains(e.target)) mobileMenu.classList.remove('active');
+            };
+            mobileMenu.querySelectorAll('a').forEach(link => link.onclick = () => mobileMenu.classList.remove('active'));
+        }
+
+        // ── Character counter ──
+        const msgArea = document.getElementById('contactMessage');
+        const charCount = document.getElementById('charCount');
+        if (msgArea && charCount) {
+            msgArea.addEventListener('input', () => {
+                charCount.textContent = msgArea.value.length;
+                charCount.style.color = msgArea.value.length > 900 ? '#ef4444' : '#9ca3af';
+            });
+        }
+
+        // ── Validation helpers ──
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+        }
+
+        function showStatus(type, message) {
+            const el = document.getElementById('formStatus');
+            el.className = 'form-status ' + type;
+            el.innerHTML = message;
+        }
+
+        function setLoading(loading) {
+            const btn = document.getElementById('submitBtn');
+            const text = document.getElementById('submitText');
+            btn.disabled = loading;
+            text.textContent = loading ? '⏳ Sending...' : '✉️ Send Message';
+        }
+
+        // ── Form submission (mailto fallback + Firebase logging) ──
+        async function submitContactForm() {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const classVal = document.getElementById('contactClass').value;
+            const subject = document.getElementById('contactSubject').value;
+            const message = document.getElementById('contactMessage').value.trim();
+
+            // Client-side validation
+            if (!name) { showStatus('error', '⚠️ Please enter your name.'); return; }
+            if (!email || !isValidEmail(email)) { showStatus('error', '⚠️ Please enter a valid email address.'); return; }
+            if (!message || message.length < 10) { showStatus('error', '⚠️ Please write a message (at least 10 characters).'); return; }
+
+            setLoading(true);
+            document.getElementById('formStatus').className = 'form-status';
+
+            try {
+                // Try to save to Firebase Firestore if available
+                if (typeof firebase !== 'undefined' && typeof db !== 'undefined') {
+                    await db.collection('contact_messages').add({
+                        name,
+                        email,
+                        class: classVal || 'not specified',
+                        subject,
+                        message,
+                        sentAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        read: false
+                    });
+                }
+
+                // Success — show confirmation and open email client as backup
+                showStatus('success', `
+                    ✅ <strong>Message sent successfully!</strong><br>
+                    Thank you, ${escapeHtml(name)}! We've received your message and will reply to <strong>${escapeHtml(email)}</strong> within 24–48 hours.
+                `);
+
+                // Open mailto as a reliable backup delivery method
+                const subjectLabel = {
+                    general: 'General Inquiry',
+                    'missing-material': 'Missing Study Material',
+                    'broken-link': 'Broken Link / Error',
+                    suggestion: 'Suggestion',
+                    copyright: 'Copyright Concern',
+                    other: 'Other'
+                }[subject] || subject;
+
+                const mailtoBody = `Name: ${name}%0AEmail: ${email}%0AClass: ${classVal || 'Not specified'}%0AType: ${subjectLabel}%0A%0AMessage:%0A${encodeURIComponent(message)}`;
+                const mailtoLink = `mailto:studyleem@gmail.com?subject=StudyLeem Contact: ${encodeURIComponent(subjectLabel)}&body=${mailtoBody}`;
+
+                // Open mailto after short delay so user sees success message
+                setTimeout(() => { window.location.href = mailtoLink; }, 800);
+
+                // Reset form
+                document.getElementById('contactName').value = '';
+                document.getElementById('contactEmail').value = '';
+                document.getElementById('contactClass').value = '';
+                document.getElementById('contactSubject').value = 'general';
+                document.getElementById('contactMessage').value = '';
+                document.getElementById('charCount').textContent = '0';
+
+            } catch (error) {
+                console.error('Contact form error:', error);
+                // Fallback: open mailto directly
+                const mailtoBody = `Name: ${name}%0AEmail: ${email}%0A%0AMessage:%0A${encodeURIComponent(message)}`;
+                const mailtoLink = `mailto:studyleem@gmail.com?subject=StudyLeem Contact&body=${mailtoBody}`;
+                window.location.href = mailtoLink;
+                showStatus('success', '✅ Opening your email client to send the message...');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Allow Enter in textarea (don't submit), but allow Ctrl+Enter to submit
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) submitContactForm();
+        });
+    </script>
+
+    <!-- Firebase (for saving contact messages) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="/firebase-config.js"></script>
+</body>
+</html>

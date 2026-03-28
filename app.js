@@ -60,7 +60,7 @@ function setupSearch() {
             }
 
             const first = results[0];
-            window.location.href = `subject?class=${first.class}&subject=${encodeURIComponent(first.subject)}`;
+            window.location.href = `/${first.class}/${encodeURIComponent(first.subject.toLowerCase().replace(/ /g, '-'))}`;
 
         } catch (error) {
             console.error('Search error:', error);
@@ -127,7 +127,7 @@ function loadLatestMaterials(materials) {
     const latest = materials.slice(0, 6);
 
     container.innerHTML = latest.map(m => `
-        <div class="material-card" onclick="window.location.href='subject?class=${m.class}&subject=${encodeURIComponent(m.subject)}'">
+        <div class="material-card" onclick="window.location.href='/${m.class}/${encodeURIComponent(m.subject.toLowerCase().replace(/ /g, \"-\"))}'">
             <div style="position:relative">
                 <img src="${m.coverImage}"
                      alt="${escapeHtml(m.title)}"
@@ -172,7 +172,7 @@ function loadPopularSubjects(materials) {
         .slice(0, 8);
 
     container.innerHTML = subjects.map(s => `
-        <a href="subject?class=${s.class}&subject=${encodeURIComponent(s.subject)}" class="subject-card">
+        <a href="/${s.class}/${encodeURIComponent(s.subject.toLowerCase().replace(/ /g, '-'))}" class="subject-card">
             <h3>${escapeHtml(s.subject)}</h3>
             <p>Class ${s.class}</p>
             <p>${s.count} material${s.count !== 1 ? 's' : ''}</p>

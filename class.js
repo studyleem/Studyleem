@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const classNum = new URLSearchParams(window.location.search).get('class');
 
     if (!classNum) {
-        window.location.href = 'home';
+        window.location.href = '/home';
         return;
     }
 
@@ -75,7 +75,7 @@ async function initPage(classNum) {
         container.innerHTML = subjects.map(subject => {
             const counts = subjectMap[subject];
             return `
-                <a href="subject?class=${classNum}&subject=${encodeURIComponent(subject)}" class="subject-card">
+                <a href="/${classNum}/${encodeURIComponent(subject.toLowerCase().replace(/ /g, '-'))}" class="subject-card">
                     <h3>${escapeHtml(subject)}</h3>
                     <p>Class ${classNum}</p>
                     <p>${counts.books} Books • ${counts.notes} Notes</p>

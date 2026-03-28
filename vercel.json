@@ -1,0 +1,32 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/home.html" },
+    { "source": "/home", "destination": "/home.html" },
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/class", "destination": "/class.html" },
+    { "source": "/subject", "destination": "/subject.html" },
+    { "source": "/:classNum(9|10|11|12)/:subject/:chapter", "destination": "/subject.html?class=:classNum&subject=:subject&chapter=:chapter" },
+    { "source": "/:classNum(9|10|11|12)/:subject", "destination": "/subject.html?class=:classNum&subject=:subject" },
+    { "source": "/:classNum(9|10|11|12)", "destination": "/class.html?class=:classNum" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+      ]
+    },
+    {
+      "source": "/firebase-config.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    }
+  ]
+}

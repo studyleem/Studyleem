@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - StudyLeem</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNNDTM33RB"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -9,15 +13,11 @@
       gtag('js', new Date());
       gtag('config', 'G-ZNNDTM33RB');
     </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - StudyLeem</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="admin-body">
     <div id="loginPage" class="admin-login-container">
         <div class="login-box">
-            <img src="logo.png" alt="StudyLeem" class="login-logo">
+            <img src="/logo.png" alt="StudyLeem" class="login-logo">
             <h2>Admin Login</h2>
             <form id="loginForm">
                 <div class="form-group">
@@ -31,7 +31,7 @@
                 <button type="submit" class="btn btn-primary btn-block">Login</button>
                 <div id="loginError" class="error-message"></div>
             </form>
-            <a href="home" class="back-link">← Home</a>
+            <a href="/home" class="back-link">← Home</a>
         </div>
     </div>
 
@@ -45,6 +45,7 @@
                 <a href="#" class="admin-nav-link active" data-page="upload">📤 Upload</a>
                 <a href="#" class="admin-nav-link" data-page="manage">📚 Manage</a>
                 <a href="#" class="admin-nav-link" data-page="stats">📊 Stats</a>
+                <a href="#" class="admin-nav-link" data-page="messages">✉️ Messages</a>
                 <a href="#" id="logoutBtn" class="admin-nav-link logout">🚪 Logout</a>
             </nav>
         </aside>
@@ -56,6 +57,7 @@
             </div>
 
             <div class="admin-content">
+                <!-- Upload Page -->
                 <div id="uploadPage" class="admin-page active">
                     <div class="upload-card">
                         <div class="material-type-selector">
@@ -126,6 +128,7 @@
                     </div>
                 </div>
 
+                <!-- Manage Page -->
                 <div id="managePage" class="admin-page">
                     <div class="manage-controls">
                         <input type="text" id="searchMaterials" placeholder="Search...">
@@ -162,6 +165,7 @@
                     </div>
                 </div>
 
+                <!-- Stats Page -->
                 <div id="statsPage" class="admin-page">
                     <div class="stats-grid">
                         <div class="stat-card">
@@ -194,10 +198,41 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Messages Page (new) -->
+                <div id="messagesPage" class="admin-page">
+                    <div class="manage-controls">
+                        <input type="text" id="searchMessages" placeholder="Search messages...">
+                        <select id="filterMessageStatus">
+                            <option value="">All Messages</option>
+                            <option value="unread">Unread</option>
+                            <option value="read">Read</option>
+                        </select>
+                    </div>
+                    <div class="materials-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Subject</th>
+                                    <th>Preview</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="messagesTableBody">
+                                <tr><td colspan="7" class="loading">Loading messages...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
+    <!-- Edit Material Modal -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -255,10 +290,21 @@
         </div>
     </div>
 
+    <!-- View Message Modal -->
+    <div id="viewMessageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Contact Message</h2>
+                <button class="modal-close" id="closeViewMessage">&times;</button>
+            </div>
+            <div class="modal-body" id="viewMessageBody"></div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
-    <script src="admin.js"></script>
+    <script src="/firebase-config.js"></script>
+    <script src="/admin.js"></script>
 </body>
 </html>

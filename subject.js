@@ -6,11 +6,21 @@ let isDownloadAllowed = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
-    const classNum = params.get('class');
-    const subject = params.get('subject');
+    let classNum = params.get('class');
+    let subject = params.get('subject');
+
+    // Support clean path URLs: /12/biology or /12/biology/chapter-1
+    if (!classNum || !subject) {
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        if (pathParts.length >= 2) {
+            classNum = pathParts[0];
+            // Convert slug back to title case e.g. "computer-science" -> "Computer Science"
+            subject = pathParts[1].replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        }
+    }
 
     if (!classNum || !subject) {
-        window.location.href = 'home';
+        window.location.href = '/home';
         return;
     }
 
@@ -22,8 +32,16 @@ document.addEventListener('DOMContentLoaded', () => {
         loadMaterials(classNum, subject);
     }, 500);
 
-    document.getElementById('pageTitle').textContent = `${subject} - Class ${classNum}`;
+    document.getElementById('pageTitle').textContent = `${subject} - Class ${classNum} | StudyLeem`;
     document.getElementById('subjectTitle').textContent = subject;
+
+    // Build breadcrumb
+    const bc = document.getElementById('breadcrumb');
+    if (bc) {
+        bc.innerHTML = `<a href="/home">Home</a> › <a href="/${classNum}">Class ${classNum}</a> › ${subject}`;
+        bc.style.cssText = 'color:#6b7280;font-size:0.85rem;margin-bottom:0.5rem;display:block;';
+        bc.querySelectorAll('a').forEach(a => a.style.cssText = 'color:#2563eb;text-decoration:none;');
+    }
 });
 
 function setupMobileMenu() {
