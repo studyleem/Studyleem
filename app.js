@@ -60,7 +60,7 @@ function setupSearch() {
             }
 
             const first = results[0];
-            window.location.href = `/${first.class}/${encodeURIComponent(first.subject.toLowerCase().replace(/ /g, '-'))}`;
+            window.location.href = `/subject?class=${first.class}&subject=${encodeURIComponent(first.subject)}`;
 
         } catch (error) {
             console.error('Search error:', error);
@@ -109,14 +109,8 @@ async function loadData() {
 
     } catch (error) {
         console.error('❌ Load data error:', error);
-        console.error('Error stack:', error.stack);
-
-        if (latestContainer) {
-            latestContainer.innerHTML = '<p class="loading">Error loading materials. Check console for details.</p>';
-        }
-        if (subjectsContainer) {
-            subjectsContainer.innerHTML = '<p class="loading">Error loading subjects. Check console for details.</p>';
-        }
+        if (latestContainer) latestContainer.innerHTML = '<p class="loading">Error loading materials. Check console for details.</p>';
+        if (subjectsContainer) subjectsContainer.innerHTML = '<p class="loading">Error loading subjects. Check console for details.</p>';
     }
 }
 
@@ -127,7 +121,7 @@ function loadLatestMaterials(materials) {
     const latest = materials.slice(0, 6);
 
     container.innerHTML = latest.map(m => `
-        <div class="material-card" onclick="window.location.href='/${m.class}/${encodeURIComponent(m.subject.toLowerCase().replace(/ /g, \"-\"))}'">
+        <div class="material-card" onclick="window.location.href='/subject?class=${m.class}&subject=${encodeURIComponent(m.subject)}'">
             <div style="position:relative">
                 <img src="${m.coverImage}"
                      alt="${escapeHtml(m.title)}"
@@ -158,11 +152,7 @@ function loadPopularSubjects(materials) {
     materials.forEach(m => {
         const key = `${m.class}-${m.subject}`;
         if (!subjectCounts[key]) {
-            subjectCounts[key] = {
-                class: m.class,
-                subject: m.subject,
-                count: 0
-            };
+            subjectCounts[key] = { class: m.class, subject: m.subject, count: 0 };
         }
         subjectCounts[key].count++;
     });
@@ -172,7 +162,7 @@ function loadPopularSubjects(materials) {
         .slice(0, 8);
 
     container.innerHTML = subjects.map(s => `
-        <a href="/${s.class}/${encodeURIComponent(s.subject.toLowerCase().replace(/ /g, '-'))}" class="subject-card">
+        <a href="/subject?class=${s.class}&subject=${encodeURIComponent(s.subject)}" class="subject-card">
             <h3>${escapeHtml(s.subject)}</h3>
             <p>Class ${s.class}</p>
             <p>${s.count} material${s.count !== 1 ? 's' : ''}</p>
@@ -187,13 +177,11 @@ function updateStats(materials) {
         notes: materials.filter(m => m.type === 'notes').length
     };
 
-    const elements = [
+    [
         { id: 'totalMaterials', value: stats.total },
-        { id: 'totalBooks', value: stats.books },
-        { id: 'totalNotes', value: stats.notes }
-    ];
-
-    elements.forEach(({ id, value }) => {
+        { id: 'totalBooks',     value: stats.books },
+        { id: 'totalNotes',     value: stats.notes }
+    ].forEach(({ id, value }) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
     });

@@ -30,7 +30,7 @@ function setupMobileMenu() {
 
 async function initPage(classNum) {
     const titles = {
-        '9': 'Class 9 - SSC Part 1',
+        '9':  'Class 9 - SSC Part 1',
         '10': 'Class 10 - SSC Part 2',
         '11': 'Class 11 - HSSC Part 1',
         '12': 'Class 12 - HSSC Part 2'
@@ -75,7 +75,7 @@ async function initPage(classNum) {
         container.innerHTML = subjects.map(subject => {
             const counts = subjectMap[subject];
             return `
-                <a href="/${classNum}/${encodeURIComponent(subject.toLowerCase().replace(/ /g, '-'))}" class="subject-card">
+                <a href="/subject?class=${classNum}&subject=${encodeURIComponent(subject)}" class="subject-card">
                     <h3>${escapeHtml(subject)}</h3>
                     <p>Class ${classNum}</p>
                     <p>${counts.books} Books • ${counts.notes} Notes</p>
@@ -85,7 +85,6 @@ async function initPage(classNum) {
 
     } catch (error) {
         console.error('❌ Load subjects error:', error);
-        console.error('Error details:', error.message);
         container.innerHTML = '<p class="loading">Error loading subjects. Check console for details.</p>';
     }
 }

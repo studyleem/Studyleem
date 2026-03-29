@@ -6,18 +6,8 @@ let isDownloadAllowed = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
-    let classNum = params.get('class');
-    let subject = params.get('subject');
-
-    // Support clean path URLs: /12/biology or /12/biology/chapter-1
-    if (!classNum || !subject) {
-        const pathParts = window.location.pathname.split('/').filter(Boolean);
-        if (pathParts.length >= 2) {
-            classNum = pathParts[0];
-            // Convert slug back to title case e.g. "computer-science" -> "Computer Science"
-            subject = pathParts[1].replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-        }
-    }
+    const classNum = params.get('class');
+    const subject = params.get('subject');
 
     if (!classNum || !subject) {
         window.location.href = '/home';
@@ -34,14 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('pageTitle').textContent = `${subject} - Class ${classNum} | StudyLeem`;
     document.getElementById('subjectTitle').textContent = subject;
-
-    // Build breadcrumb
-    const bc = document.getElementById('breadcrumb');
-    if (bc) {
-        bc.innerHTML = `<a href="/home">Home</a> › <a href="/${classNum}">Class ${classNum}</a> › ${subject}`;
-        bc.style.cssText = 'color:#6b7280;font-size:0.85rem;margin-bottom:0.5rem;display:block;';
-        bc.querySelectorAll('a').forEach(a => a.style.cssText = 'color:#2563eb;text-decoration:none;');
-    }
 });
 
 function setupMobileMenu() {
@@ -97,7 +79,10 @@ async function loadMaterials(classNum, subject) {
 }
 
 function filterMaterials() {
-    const filtered = currentFilter === 'all' ? allMaterials : allMaterials.filter(m => m.type === currentFilter);
+    const filtered = currentFilter === 'all'
+        ? allMaterials
+        : allMaterials.filter(m => m.type === currentFilter);
+
     const grid = document.getElementById('materialsGrid');
 
     if (filtered.length === 0) {
@@ -123,7 +108,7 @@ function filterMaterials() {
                     ${m.chapterNumber ? `<span>Ch. ${m.chapterNumber}</span>` : ''}
                 </div>
                 <p class="material-description">${escapeHtml(m.description || '')}</p>
-                <button class="btn btn-primary btn-sm" onclick='openPreview(${JSON.stringify(m.title)}, ${JSON.stringify(m.pdfLink)})'>👁 Preview & Download</button>
+                <button class="btn btn-primary btn-sm" onclick='openPreview(${JSON.stringify(m.title)}, ${JSON.stringify(m.pdfLink)})'>👁 Preview &amp; Download</button>
             </div>
         </div>
     `).join('');
@@ -152,32 +137,25 @@ window.openPreview = function(title, url) {
     const iframe = document.getElementById('pdfViewer');
     const container = iframe.parentElement;
 
-    // Show loading
     container.innerHTML = '<div class="pdf-loading">Loading PDF preview...</div><iframe id="pdfViewer" title="PDF Viewer" frameborder="0"></iframe>';
 
-    let fileId = extractGoogleDriveId(url);
+    const fileId = extractGoogleDriveId(url);
 
     if (fileId) {
         const viewerUrl = `https://docs.google.com/viewer?url=https://drive.google.com/uc?export=download%26id=${fileId}&embedded=true`;
-
         setTimeout(() => {
             const newIframe = document.getElementById('pdfViewer');
             newIframe.src = viewerUrl;
             newIframe.style.cssText = 'width:100%;height:600px;border:none;display:block;';
             const loadingEl = container.querySelector('.pdf-loading');
             if (loadingEl) loadingEl.style.display = 'none';
-
-            newIframe.onload = () => {
-                console.log('✅ PDF loaded');
-            };
-
+            newIframe.onload = () => console.log('✅ PDF loaded');
             newIframe.onerror = () => {
                 container.innerHTML = '<div class="pdf-error"><p>⚠️ Cannot preview PDF</p><p>Use download button below</p></div><iframe id="pdfViewer" title="PDF Viewer" frameborder="0"></iframe>';
             };
         }, 100);
     } else {
         const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
-
         setTimeout(() => {
             const newIframe = document.getElementById('pdfViewer');
             newIframe.src = viewerUrl;
@@ -196,14 +174,10 @@ function extractGoogleDriveId(url) {
         /\/uc\?.*id=([a-zA-Z0-9_-]+)/,
         /\/d\/([a-zA-Z0-9_-]+)/
     ];
-
     for (const pattern of patterns) {
         const match = url.match(pattern);
-        if (match && match[1]) {
-            return match[1];
-        }
+        if (match && match[1]) return match[1];
     }
-
     return null;
 }
 
@@ -248,7 +222,6 @@ function actuallyDownload() {
 
     let downloadUrl = currentPdfUrl;
     const fileId = extractGoogleDriveId(currentPdfUrl);
-
     if (fileId) {
         downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
     }
@@ -273,12 +246,10 @@ function closeModal() {
         iframe.src = '';
         iframe.style.display = 'none';
     }
-
     if (downloadTimerInterval) {
         clearInterval(downloadTimerInterval);
         downloadTimerInterval = null;
     }
-
     currentPdfUrl = '';
     isDownloadAllowed = false;
 }

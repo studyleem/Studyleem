@@ -1,50 +1,28 @@
 {
   "rewrites": [
-    {
-      "source": "/",
-      "destination": "/home.html"
-    },
-    {
-      "source": "/home",
-      "destination": "/home.html"
-    },
-    {
-      "source": "/class",
-      "destination": "/class.html"
-    },
-    {
-      "source": "/subject",
-      "destination": "/subject.html"
-    },
-    {
-      "source": "/admin",
-      "destination": "/admin.html"
-    },
-    {
-      "source": "/privacy",
-      "destination": "/privacy.html"
-    },
-    {
-      "source": "/terms",
-      "destination": "/terms.html"
-    },
-    {
-      "source": "/about",
-      "destination": "/about.html"
-    },
-    {
-      "source": "/contact",
-      "destination": "/contact.html"
-    }
+    { "source": "/",           "destination": "/home.html" },
+    { "source": "/home",       "destination": "/home.html" },
+    { "source": "/about",      "destination": "/about.html" },
+    { "source": "/privacy",    "destination": "/privacy.html" },
+    { "source": "/terms",      "destination": "/terms.html" },
+    { "source": "/contact",    "destination": "/contact.html" },
+    { "source": "/admin",      "destination": "/admin.html" },
+    { "source": "/class",      "destination": "/class.html" },
+    { "source": "/subject",    "destination": "/subject.html" }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options",        "value": "SAMEORIGIN" },
+        { "key": "X-XSS-Protection",       "value": "1; mode=block" }
+      ]
+    },
+    {
+      "source": "/firebase-config.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
       ]
     }
   ]

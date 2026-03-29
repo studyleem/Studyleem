@@ -1,27 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1372125039445576"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Not Found - StudyLeem</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon-192.png">
     <link rel="stylesheet" href="/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        .not-found {
-            min-height: 70vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-        }
-        .not-found-content { max-width: 500px; }
-        .not-found-code { font-size: 6rem; font-weight: 700; color: #2563eb; line-height: 1; margin-bottom: 0.5rem; }
-        .not-found-title { font-size: 1.5rem; color: #1f2937; margin-bottom: 1rem; }
-        .not-found-text { color: #6b7280; margin-bottom: 2rem; }
-        .not-found-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .nf{min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem}
+        .nf-inner{max-width:480px}
+        .nf-code{font-size:6rem;font-weight:700;color:#2563eb;line-height:1;margin-bottom:.5rem}
+        .nf-title{font-size:1.5rem;color:#1f2937;margin-bottom:.8rem}
+        .nf-text{color:#6b7280;margin-bottom:2rem}
+        .nf-links{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
     </style>
 </head>
 <body>
@@ -29,37 +23,31 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <a href="/home" style="display:flex;align-items:center;gap:0.5rem;">
-                        <img src="/logo.png" alt="StudyLeem Logo" style="height:50px;">
-                        <div class="logo-text">
-                            <span style="color:#1f2937;">Study</span><span style="color:#2563eb;">Leem</span>
-                        </div>
+                    <a href="/home" style="display:flex;align-items:center;gap:.5rem">
+                        <img src="/logo.png" alt="StudyLeem" style="height:50px">
+                        <div class="logo-text"><span style="color:#1f2937">Study</span><span style="color:#2563eb">Leem</span></div>
                     </a>
                 </div>
             </div>
         </div>
     </header>
-
-    <div class="not-found">
-        <div class="not-found-content">
-            <div class="not-found-code">404</div>
-            <h1 class="not-found-title">Page Not Found</h1>
-            <p class="not-found-text">Oops! The page you're looking for doesn't exist. It might have been moved or the URL is incorrect.</p>
-            <div class="not-found-links">
+    <div class="nf">
+        <div class="nf-inner">
+            <div class="nf-code">404</div>
+            <h1 class="nf-title">Page Not Found</h1>
+            <p class="nf-text">The page you're looking for doesn't exist or has been moved.</p>
+            <div class="nf-links">
                 <a href="/home" class="btn btn-primary">🏠 Go Home</a>
-                <a href="/9" class="btn btn-secondary">Class 9</a>
-                <a href="/10" class="btn btn-secondary">Class 10</a>
-                <a href="/11" class="btn btn-secondary">Class 11</a>
-                <a href="/12" class="btn btn-secondary">Class 12</a>
+                <a href="/class?class=9"  class="btn btn-secondary">Class 9</a>
+                <a href="/class?class=10" class="btn btn-secondary">Class 10</a>
+                <a href="/class?class=11" class="btn btn-secondary">Class 11</a>
+                <a href="/class?class=12" class="btn btn-secondary">Class 12</a>
             </div>
         </div>
     </div>
-
     <footer class="footer">
         <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2026 StudyLeem. All rights reserved.</p>
-            </div>
+            <div class="footer-bottom"><p>&copy; 2026 StudyLeem. All rights reserved.</p></div>
         </div>
     </footer>
 </body>
