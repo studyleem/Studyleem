@@ -1,12 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://studyleem.vercel.app/home</loc><priority>1.0</priority></url>
-  <url><loc>https://studyleem.vercel.app/class?class=9</loc><priority>0.9</priority></url>
-  <url><loc>https://studyleem.vercel.app/class?class=10</loc><priority>0.9</priority></url>
-  <url><loc>https://studyleem.vercel.app/class?class=11</loc><priority>0.9</priority></url>
-  <url><loc>https://studyleem.vercel.app/class?class=12</loc><priority>0.9</priority></url>
-  <url><loc>https://studyleem.vercel.app/about</loc><priority>0.6</priority></url>
-  <url><loc>https://studyleem.vercel.app/contact</loc><priority>0.6</priority></url>
-  <url><loc>https://studyleem.vercel.app/terms</loc><priority>0.4</priority></url>
-  <url><loc>https://studyleem.vercel.app/privacy</loc><priority>0.4</priority></url>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://studyleem.vercel.app/</loc>
+  <lastmod>2026-03-31T00:36:58+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://studyleem.vercel.app/home</loc>
+  <lastmod>2026-03-31T00:36:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://studyleem.vercel.app/about</loc>
+  <lastmod>2026-03-31T00:37:01+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://studyleem.vercel.app/contact</loc>
+  <lastmod>2026-03-31T00:37:01+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://studyleem.vercel.app/terms</loc>
+  <lastmod>2026-03-31T00:37:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://studyleem.vercel.app/privacy</loc>
+  <lastmod>2026-03-31T00:37:00+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://studyleem.vercel.app/class?class=9</loc>
+  <lastmod>2026-03-31T00:36:59+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://studyleem.vercel.app/class?class=10</loc>
+  <lastmod>2026-03-31T00:36:59+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://studyleem.vercel.app/class?class=11</loc>
+  <lastmod>2026-03-31T00:36:59+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://studyleem.vercel.app/class?class=12</loc>
+  <lastmod>2026-03-31T00:36:59+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+
+
 </urlset>
