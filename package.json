@@ -1,0 +1,12 @@
+{
+  "name": "studyleem",
+  "version": "1.0.0",
+  "description": "StudyLeem - Free FBISE Notes & Books Class 9-12",
+  "private": true,
+  "scripts": {
+    "install-analytics": "npm install"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.3.1"
+  }
+}
