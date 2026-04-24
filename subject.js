@@ -1,8 +1,5 @@
 let allMaterials = [];
 let currentFilter = 'all';
-let downloadTimerInterval = null;
-let currentPdfUrl = '';
-let isDownloadAllowed = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
@@ -16,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setupMobileMenu();
     setupTabs();
-    setupModal();
 
     setTimeout(() => {
         loadMaterials(classNum, subject);
@@ -51,14 +47,6 @@ function setupTabs() {
             filterMaterials();
         };
     });
-}
-
-function setupModal() {
-    document.getElementById('closeModal').onclick = closeModal;
-    document.getElementById('pdfModal').onclick = (e) => {
-        if (e.target.id === 'pdfModal') closeModal();
-    };
-    document.getElementById('downloadBtn').onclick = handleDownloadClick;
 }
 
 async function loadMaterials(classNum, subject) {
@@ -121,135 +109,15 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+// Navigate to the dedicated PDF preview page
 window.openPreview = function(title, url) {
-    document.getElementById('modalTitle').textContent = title;
-    document.getElementById('pdfModal').classList.add('active');
-
-    isDownloadAllowed = false;
-    currentPdfUrl = url;
-
-    const downloadBtn = document.getElementById('downloadBtn');
-    const downloadText = document.getElementById('downloadText');
-    downloadBtn.disabled = false;
-    downloadText.textContent = '⏱ Start Download Timer';
-    document.getElementById('timerDisplay').textContent = '';
-
-    const iframe = document.getElementById('pdfViewer');
-    const container = iframe.parentElement;
-
-    container.innerHTML = '<div class="pdf-loading">Loading PDF preview...</div><iframe id="pdfViewer" title="PDF Viewer" frameborder="0"></iframe>';
-
-    const fileId = extractGoogleDriveId(url);
-
-    if (fileId) {
-        const viewerUrl = `https://docs.google.com/viewer?url=https://drive.google.com/uc?export=download%26id=${fileId}&embedded=true`;
-        setTimeout(() => {
-            const newIframe = document.getElementById('pdfViewer');
-            newIframe.src = viewerUrl;
-            newIframe.style.cssText = 'width:100%;height:600px;border:none;display:block;';
-            const loadingEl = container.querySelector('.pdf-loading');
-            if (loadingEl) loadingEl.style.display = 'none';
-            newIframe.onload = () => console.log('✅ PDF loaded');
-            newIframe.onerror = () => {
-                container.innerHTML = '<div class="pdf-error"><p>⚠️ Cannot preview PDF</p><p>Use download button below</p></div><iframe id="pdfViewer" title="PDF Viewer" frameborder="0"></iframe>';
-            };
-        }, 100);
-    } else {
-        const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
-        setTimeout(() => {
-            const newIframe = document.getElementById('pdfViewer');
-            newIframe.src = viewerUrl;
-            newIframe.style.cssText = 'width:100%;height:600px;border:none;display:block;';
-            const loadingEl = container.querySelector('.pdf-loading');
-            if (loadingEl) loadingEl.style.display = 'none';
-        }, 100);
+    if (!url) {
+        alert('PDF link not available for this material.');
+        return;
     }
+    const backUrl = window.location.pathname + window.location.search;
+    const previewUrl = '/pdf-preview?title=' + encodeURIComponent(title)
+        + '&url=' + encodeURIComponent(url)
+        + '&back=' + encodeURIComponent(backUrl);
+    window.location.href = previewUrl;
 };
-
-function extractGoogleDriveId(url) {
-    const patterns = [
-        /\/file\/d\/([a-zA-Z0-9_-]+)/,
-        /id=([a-zA-Z0-9_-]+)/,
-        /\/open\?id=([a-zA-Z0-9_-]+)/,
-        /\/uc\?.*id=([a-zA-Z0-9_-]+)/,
-        /\/d\/([a-zA-Z0-9_-]+)/
-    ];
-    for (const pattern of patterns) {
-        const match = url.match(pattern);
-        if (match && match[1]) return match[1];
-    }
-    return null;
-}
-
-function handleDownloadClick() {
-    if (isDownloadAllowed) {
-        actuallyDownload();
-    } else {
-        startDownloadTimer();
-    }
-}
-
-function startDownloadTimer() {
-    const btn = document.getElementById('downloadBtn');
-    const downloadText = document.getElementById('downloadText');
-    const display = document.getElementById('timerDisplay');
-
-    btn.disabled = true;
-    let seconds = 15;
-
-    display.textContent = `Please wait ${seconds} seconds...`;
-    display.style.color = '#2563eb';
-
-    if (downloadTimerInterval) clearInterval(downloadTimerInterval);
-
-    downloadTimerInterval = setInterval(() => {
-        seconds--;
-        display.textContent = `Please wait ${seconds} second${seconds !== 1 ? 's' : ''}...`;
-
-        if (seconds <= 0) {
-            clearInterval(downloadTimerInterval);
-            isDownloadAllowed = true;
-            btn.disabled = false;
-            downloadText.textContent = '⬇ Download Now';
-            display.textContent = '✅ Ready! Click to download';
-            display.style.color = '#10b981';
-        }
-    }, 1000);
-}
-
-function actuallyDownload() {
-    if (!currentPdfUrl) return;
-
-    let downloadUrl = currentPdfUrl;
-    const fileId = extractGoogleDriveId(currentPdfUrl);
-    if (fileId) {
-        downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-    }
-
-    const a = document.createElement('a');
-    a.href = downloadUrl;
-    a.download = 'StudyLeem.pdf';
-    a.target = '_blank';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    isDownloadAllowed = false;
-    document.getElementById('downloadText').textContent = '⏱ Start Timer Again';
-    document.getElementById('timerDisplay').textContent = '';
-}
-
-function closeModal() {
-    document.getElementById('pdfModal').classList.remove('active');
-    const iframe = document.getElementById('pdfViewer');
-    if (iframe) {
-        iframe.src = '';
-        iframe.style.display = 'none';
-    }
-    if (downloadTimerInterval) {
-        clearInterval(downloadTimerInterval);
-        downloadTimerInterval = null;
-    }
-    currentPdfUrl = '';
-    isDownloadAllowed = false;
-}

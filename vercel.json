@@ -1,21 +1,21 @@
 {
   "rewrites": [
-    { "source": "/",           "destination": "/home.html" },
-    { "source": "/home",       "destination": "/home.html" },
-    { "source": "/about",      "destination": "/about.html" },
-    { "source": "/privacy",    "destination": "/privacy.html" },
-    { "source": "/terms",      "destination": "/terms.html" },
-    { "source": "/contact",    "destination": "/contact.html" },
-    { "source": "/admin",      "destination": "/admin.html" },
-    { "source": "/class",      "destination": "/class.html" },
-    { "source": "/subject",    "destination": "/subject.html" }
+    { "source": "/",             "destination": "/home.html" },
+    { "source": "/home",         "destination": "/home.html" },
+    { "source": "/about",        "destination": "/about.html" },
+    { "source": "/privacy",      "destination": "/privacy.html" },
+    { "source": "/terms",        "destination": "/terms.html" },
+    { "source": "/contact",      "destination": "/contact.html" },
+    { "source": "/admin",        "destination": "/admin.html" },
+    { "source": "/class",        "destination": "/class.html" },
+    { "source": "/subject",      "destination": "/subject.html" },
+    { "source": "/pdf-preview",  "destination": "/pdf-preview.html" }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options",        "value": "SAMEORIGIN" },
         { "key": "X-XSS-Protection",       "value": "1; mode=block" }
       ]
     },
