@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">View PDF – StudyLeem</title>
+<meta name="description" id="pageDesc" content="View FBISE study material PDF online. Federal Board Pakistan free notes.">
+<meta name="keywords" id="pageKeywords" content="FBISE notes PDF, Federal Board PDF viewer">
+<link rel="canonical" id="pageCanonical" href="https://studyleem.vercel.app/fbise">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/favicon-192.png">
+<link rel="stylesheet" href="/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1372125039445576" crossorigin="anonymous"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNNDTM33RB"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZNNDTM33RB');</script>
+<style>
+body{display:flex;flex-direction:column;min-height:100vh;margin:0;}
+.viewer-wrap{flex:1;display:flex;flex-direction:column;background:#1e1e2e;}
+.viewer-bar{background:linear-gradient(135deg,var(--primary,#2563eb),#1d4ed8);color:#fff;padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.viewer-back{display:inline-flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:8px;padding:.45rem 1rem;font-size:.875rem;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s;flex-shrink:0;}
+.viewer-back:hover{background:rgba(255,255,255,.35);}
+.viewer-title{font-size:1rem;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.viewer-actions{display:flex;gap:.5rem;flex-shrink:0;}
+.viewer-btn{display:inline-flex;align-items:center;gap:.35rem;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:.45rem .9rem;font-size:.82rem;font-weight:600;text-decoration:none;cursor:pointer;transition:background .2s;}
+.viewer-btn:hover{background:rgba(255,255,255,.3);}
+.pdf-container{flex:1;position:relative;min-height:calc(100vh - 120px);}
+.pdf-iframe{width:100%;height:100%;min-height:calc(100vh - 120px);border:none;display:block;}
+.pdf-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1e1e2e;color:#cbd5e1;gap:1rem;font-size:1rem;}
+.pdf-spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,.1);border-top-color:#2563eb;border-radius:50%;animation:spin 1s linear infinite;}
+.pdf-error{display:none;flex-direction:column;align-items:center;justify-content:center;padding:3rem;text-align:center;gap:1rem;color:#f1f5f9;}
+.pdf-error h2{font-size:1.5rem;margin:0;}
+.pdf-error p{color:#94a3b8;margin:0;}
+.pdf-error a{color:#60a5fa;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:600px){
+  .viewer-title{font-size:.875rem;}
+  .viewer-actions{gap:.35rem;}
+  .viewer-btn{font-size:.75rem;padding:.35rem .65rem;}
+}
+</style>
+</head>
+<body>
+<div class="viewer-wrap">
+  <div class="viewer-bar">
+    <a href="#" id="backLink" class="viewer-back">← Back</a>
+    <span class="viewer-title" id="docTitle">Loading...</span>
+    <div class="viewer-actions">
+      <a href="#" id="downloadBtn" class="viewer-btn" target="_blank" rel="noopener">⬇ Download</a>
+      <a href="#" id="openTabBtn" class="viewer-btn" target="_blank" rel="noopener">↗ Open</a>
+    </div>
+  </div>
+
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1372125039445576" data-ad-slot="8190359123" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+  <div class="pdf-container" id="pdfContainer">
+    <div class="pdf-loading" id="pdfLoading">
+      <div class="pdf-spinner"></div>
+      <p>Loading PDF, please wait...</p>
+    </div>
+    <div class="pdf-error" id="pdfError">
+      <div style="font-size:3rem;">📄</div>
+      <h2>PDF Not Loading?</h2>
+      <p>Your browser may be blocking the preview.</p>
+      <a href="#" id="fallbackOpen" target="_blank" rel="noopener" class="viewer-btn" style="font-size:1rem;padding:.75rem 1.5rem;">Open PDF Directly ↗</a>
+    </div>
+    <iframe id="pdfIframe" class="pdf-iframe" style="display:none;" title="PDF Viewer" allowfullscreen></iframe>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="/firebase-config.js"></script>
+<script src="/fbise-viewer.js"></script>
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

@@ -1515,3 +1515,164 @@ a {
         font-size: 1.125rem;
     }
 }
+
+/* ═══════════════════════════════════════════════
+   NEW ADDITIONS — clean URLs + exercises + SEO
+═══════════════════════════════════════════════ */
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex; align-items: center; gap: .4rem;
+  font-size: .875rem; opacity: .85; margin-bottom: .75rem;
+  flex-wrap: wrap;
+}
+.breadcrumb a { color: rgba(255,255,255,.85); text-decoration: underline; }
+.breadcrumb span { opacity: .7; }
+
+/* Page header subtitle */
+.page-header p { margin-top: .5rem; opacity: .85; font-size: 1rem; }
+
+/* Type switcher (notes / books) */
+.type-switcher { display: flex; gap: .75rem; flex-wrap: wrap; }
+.type-switch-btn {
+  padding: .6rem 1.5rem; border: 2px solid var(--border);
+  border-radius: 50px; font-weight: 600; font-size: .9rem;
+  background: var(--bg); color: var(--text); transition: all .2s;
+}
+.type-switch-btn.active,
+.type-switch-btn:hover {
+  border-color: var(--primary); background: var(--primary); color: #fff;
+}
+
+/* Section subtitle */
+.section-subtitle {
+  text-align: center; color: var(--text-light);
+  margin-top: -.5rem; margin-bottom: 2.5rem; font-size: 1rem;
+}
+
+/* Chapter list */
+.chapters-list { display: flex; flex-direction: column; gap: .75rem; }
+.chapter-item {
+  display: flex; align-items: center; gap: 1rem;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.1rem 1.25rem;
+  transition: all .25s; cursor: pointer;
+}
+.chapter-item:hover {
+  border-color: var(--primary); box-shadow: 0 4px 16px var(--shadow);
+  transform: translateX(4px);
+}
+.chapter-num {
+  min-width: 110px; font-weight: 700; color: var(--primary); font-size: .9rem;
+}
+.chapter-info { flex: 1; min-width: 0; }
+.chapter-title { font-size: 1rem; font-weight: 600; color: var(--text); margin: 0; }
+.chapter-desc { font-size: .85rem; color: var(--text-light); margin: .2rem 0 0; }
+.chapter-arrow { color: var(--text-light); font-size: 1.1rem; flex-shrink: 0; }
+
+/* Filter tabs (chapters / exercises) */
+.material-type-tabs {
+  display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+}
+
+/* Features grid */
+.features-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;
+}
+.feature-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.75rem; text-align: center;
+}
+.feature-icon { font-size: 2rem; margin-bottom: .75rem; }
+.feature-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: .5rem; }
+.feature-card p  { color: var(--text-light); font-size: .9rem; line-height: 1.6; }
+
+/* Quick links grid */
+.quick-links-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1rem;
+}
+.quick-link-card {
+  background: var(--bg); border: 2px solid var(--border);
+  border-radius: 10px; padding: 1rem; text-align: center;
+  font-weight: 600; font-size: .95rem; transition: all .2s;
+}
+.quick-link-card:hover {
+  border-color: var(--primary); color: var(--primary);
+  transform: translateY(-3px);
+}
+
+/* Search dropdown */
+.hero-search { position: relative; }
+.search-dropdown {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: 0 8px 24px var(--shadow-md); z-index: 200; overflow: hidden;
+}
+.search-result-item {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .85rem 1rem; border-bottom: 1px solid var(--border);
+  color: var(--text); transition: background .15s; font-size: .9rem;
+}
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item:hover { background: var(--bg-light); }
+.search-result-item strong { margin-right: auto; }
+.search-meta { font-size: .78rem; color: var(--text-light); flex-shrink: 0; }
+.search-no-results { padding: 1.25rem; text-align: center; color: var(--text-light); }
+
+/* Manage page filters */
+.manage-filters {
+  display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+}
+.manage-filters .search-input {
+  flex: 1; min-width: 200px; padding: .75rem 1rem;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: .95rem; font-family: inherit;
+}
+.manage-filters select {
+  padding: .75rem 1rem; border: 1px solid var(--border);
+  border-radius: 8px; font-size: .95rem; font-family: inherit; background: var(--bg);
+}
+
+/* Admin table */
+.table-responsive { overflow-x: auto; border-radius: 12px; box-shadow: 0 2px 8px var(--shadow); }
+.admin-table { width: 100%; border-collapse: collapse; background: var(--bg); min-width: 750px; }
+.admin-table th, .admin-table td {
+  padding: .875rem 1rem; text-align: left; border-bottom: 1px solid var(--border); font-size: .9rem;
+}
+.admin-table th { background: var(--bg-light); font-weight: 700; color: var(--text); }
+.admin-table tbody tr:hover { background: var(--bg-light); }
+
+/* Contact form */
+.contact-section { padding: 4rem 0; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+.contact-form-card {
+  background: var(--bg); border-radius: 16px; padding: 2.5rem;
+  box-shadow: 0 2px 12px var(--shadow);
+}
+.contact-info-card { display: flex; flex-direction: column; gap: 1.5rem; }
+.contact-info-item {
+  display: flex; align-items: flex-start; gap: 1rem;
+  background: var(--bg); border-radius: 12px; padding: 1.25rem;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+.contact-info-icon { font-size: 1.5rem; flex-shrink: 0; }
+
+/* 404 page */
+.not-found {
+  min-height: 70vh; display: flex; align-items: center; justify-content: center; text-align: center;
+}
+.not-found-content h1 { font-size: 8rem; font-weight: 900; color: var(--primary); line-height: 1; }
+.not-found-content h2 { font-size: 2rem; margin: 1rem 0 .5rem; }
+.not-found-content p  { color: var(--text-light); margin-bottom: 2rem; }
+
+/* Responsive extras */
+@media (max-width: 768px) {
+  .contact-grid     { grid-template-columns: 1fr; }
+  .chapter-num      { min-width: 80px; font-size: .82rem; }
+  .features-grid    { grid-template-columns: 1fr 1fr; }
+  .quick-links-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+}
+@media (max-width: 480px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .chapter-item  { flex-wrap: wrap; }
+}

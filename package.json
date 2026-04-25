@@ -1,12 +1,13 @@
 {
   "name": "studyleem",
-  "version": "1.0.0",
-  "description": "StudyLeem - Free FBISE Notes & Books Class 9-12",
-  "private": true,
+  "version": "2.0.0",
+  "description": "Free FBISE notes and books for Federal Board Pakistan - Class 9-12",
   "scripts": {
-    "install-analytics": "npm install"
+    "start": "vercel dev"
   },
   "dependencies": {
     "@vercel/analytics": "^1.3.1"
-  }
+  },
+  "keywords": ["FBISE", "Federal Board", "Pakistan", "notes", "education", "class 9", "class 10", "class 11", "class 12"],
+  "license": "MIT"
 }

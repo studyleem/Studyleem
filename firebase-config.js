@@ -9,148 +9,137 @@ const firebaseConfig = {
     measurementId: "G-ZNNDTM33RB"
 };
 
-// Initialize Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
 const db = firebase.firestore();
-
-// Only initialize auth if firebase-auth is loaded (admin page)
 const auth = typeof firebase.auth === 'function' ? firebase.auth() : null;
 
-// Database helper functions
+// ── Slug helpers ──────────────────────────────────────────────────────────────
+function toSlug(str) {
+    return String(str)
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9\-]/g, '')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+}
+
+function chapterSlug(type, num, exerciseNum) {
+    if (type === 'exercise') {
+        return `exercise-${num}${exerciseNum ? '-' + exerciseNum : ''}`;
+    }
+    return `chapter-${num}`;
+}
+
+// ── Database helpers ──────────────────────────────────────────────────────────
 const DB = {
     async create(data) {
         try {
-            const docRef = await db.collection('materials').add({
+            // Auto-generate slugs
+            data.subjectSlug  = toSlug(data.subject);
+            if (data.type === 'notes' || data.type === 'exercise') {
+                data.chapterSlug = chapterSlug(
+                    data.contentType || 'chapter',
+                    data.chapterNumber,
+                    data.exerciseNumber
+                );
+            } else {
+                data.chapterSlug = null;
+            }
+            const ref = await db.collection('materials').add({
                 ...data,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
-            console.log('✅ Material created:', docRef.id);
-            return docRef.id;
-        } catch (error) {
-            console.error('❌ Create error:', error);
-            throw error;
-        }
+            console.log('✅ Created:', ref.id);
+            return ref.id;
+        } catch (e) { console.error('❌ Create:', e); throw e; }
     },
 
     async getAll() {
         try {
-            console.log('📥 Fetching all materials...');
-            const snapshot = await db.collection('materials').get();
-
-            if (snapshot.empty) {
-                console.log('⚠️ No materials found');
-                return [];
-            }
-
-            const materials = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-
-            // Sort client-side (newest first)
-            materials.sort((a, b) => {
-                const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
-                const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
-                return timeB - timeA;
+            const snap = await db.collection('materials').get();
+            if (snap.empty) return [];
+            const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            items.sort((a, b) => {
+                const tA = a.createdAt ? a.createdAt.toMillis() : 0;
+                const tB = b.createdAt ? b.createdAt.toMillis() : 0;
+                return tB - tA;
             });
-
-            console.log(`✅ Fetched ${materials.length} materials`);
-            return materials;
-        } catch (error) {
-            console.error('❌ GetAll error:', error);
-            console.error('Error details:', error.message);
-            return [];
-        }
+            return items;
+        } catch (e) { console.error('❌ GetAll:', e); return []; }
     },
 
     async getByClass(classNum) {
         try {
-            console.log(`📥 Fetching class ${classNum}...`);
-            const snapshot = await db.collection('materials')
-                .where('class', '==', String(classNum))
-                .get();
-
-            const materials = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-
-            console.log(`✅ Found ${materials.length} materials for class ${classNum}`);
-            return materials;
-        } catch (error) {
-            console.error('❌ GetByClass error:', error);
-            console.error('Error details:', error.message);
-            return [];
-        }
+            const snap = await db.collection('materials')
+                .where('class', '==', String(classNum)).get();
+            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        } catch (e) { console.error('❌ GetByClass:', e); return []; }
     },
 
     async getBySubject(classNum, subject) {
         try {
-            console.log(`📥 Fetching class ${classNum}, subject: ${subject}...`);
-            const snapshot = await db.collection('materials')
+            const snap = await db.collection('materials')
                 .where('class', '==', String(classNum))
-                .where('subject', '==', subject)
-                .get();
+                .where('subject', '==', subject).get();
+            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        } catch (e) { console.error('❌ GetBySubject:', e); return []; }
+    },
 
-            const materials = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
+    async getBySubjectSlug(classNum, subjectSlug, type) {
+        try {
+            let q = db.collection('materials')
+                .where('class', '==', String(classNum))
+                .where('subjectSlug', '==', subjectSlug);
+            if (type && type !== 'all') q = q.where('type', '==', type);
+            const snap = await q.get();
+            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        } catch (e) { console.error('❌ GetBySlug:', e); return []; }
+    },
 
-            console.log(`✅ Found ${materials.length} materials`);
-            return materials;
-        } catch (error) {
-            console.error('❌ GetBySubject error:', error);
-            console.error('Error details:', error.message);
-            return [];
-        }
+    async getByChapterSlug(classNum, subjectSlug, chapterSlug, type) {
+        try {
+            let q = db.collection('materials')
+                .where('class', '==', String(classNum))
+                .where('subjectSlug', '==', subjectSlug)
+                .where('chapterSlug', '==', chapterSlug);
+            if (type && type !== 'all') q = q.where('type', '==', type);
+            const snap = await q.get();
+            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        } catch (e) { console.error('❌ GetByChapterSlug:', e); return []; }
     },
 
     async update(id, data) {
         try {
+            if (data.subject) data.subjectSlug = toSlug(data.subject);
             await db.collection('materials').doc(id).update(data);
-            console.log('✅ Updated:', id);
-        } catch (error) {
-            console.error('❌ Update error:', error);
-            throw error;
-        }
+        } catch (e) { console.error('❌ Update:', e); throw e; }
     },
 
     async delete(id) {
         try {
             await db.collection('materials').doc(id).delete();
-            console.log('✅ Deleted:', id);
-        } catch (error) {
-            console.error('❌ Delete error:', error);
-            throw error;
-        }
+        } catch (e) { console.error('❌ Delete:', e); throw e; }
     },
 
     async getStats() {
         try {
-            const materials = await this.getAll();
+            const items = await this.getAll();
             const stats = {
-                total: materials.length,
-                books: materials.filter(m => m.type === 'books').length,
-                notes: materials.filter(m => m.type === 'notes').length,
+                total: items.length,
+                books: items.filter(m => m.type === 'books').length,
+                notes: items.filter(m => m.type === 'notes').length,
                 byClass: { '9': 0, '10': 0, '11': 0, '12': 0 }
             };
-            materials.forEach(m => {
-                const classKey = String(m.class);
-                if (stats.byClass[classKey] !== undefined) {
-                    stats.byClass[classKey]++;
-                }
+            items.forEach(m => {
+                if (stats.byClass[String(m.class)] !== undefined)
+                    stats.byClass[String(m.class)]++;
             });
             return stats;
-        } catch (error) {
-            console.error('❌ GetStats error:', error);
-            return { total: 0, books: 0, notes: 0, byClass: { '9': 0, '10': 0, '11': 0, '12': 0 } };
-        }
+        } catch (e) { return { total: 0, books: 0, notes: 0, byClass: {} }; }
     }
 };
 
-console.log('✅ Firebase initialized');
-console.log('📊 Database ready');
+console.log('✅ Firebase + DB ready');
