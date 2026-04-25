@@ -78,8 +78,16 @@ function filterMaterials() {
         return;
     }
 
-    grid.innerHTML = filtered.map(m => `
-        <div class="material-card">
+    grid.innerHTML = filtered.map(m => {
+        const titleJson  = JSON.stringify(m.title);
+        const urlJson    = JSON.stringify(m.pdfLink);
+        return `
+        <div class="material-card"
+             role="button"
+             tabindex="0"
+             title="Click to preview ${escapeHtml(m.title)}"
+             onclick='openPreview(${titleJson}, ${urlJson})'
+             onkeydown='if(event.key==="Enter"||event.key===" ")openPreview(${titleJson}, ${urlJson})'>
             <div style="position:relative">
                 <img src="${m.coverImage}"
                      alt="${escapeHtml(m.title)}"
@@ -96,10 +104,10 @@ function filterMaterials() {
                     ${m.chapterNumber ? `<span>Ch. ${m.chapterNumber}</span>` : ''}
                 </div>
                 <p class="material-description">${escapeHtml(m.description || '')}</p>
-                <button class="btn btn-primary btn-sm" onclick='openPreview(${JSON.stringify(m.title)}, ${JSON.stringify(m.pdfLink)})'>👁 Preview &amp; Download</button>
+                <div class="card-preview-hint">👁 Click to Preview &amp; Download</div>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 }
 
 function escapeHtml(text) {
@@ -116,8 +124,9 @@ window.openPreview = function(title, url) {
         return;
     }
     const backUrl = window.location.pathname + window.location.search;
-    const previewUrl = '/pdf-preview?title=' + encodeURIComponent(title)
-        + '&url=' + encodeURIComponent(url)
-        + '&back=' + encodeURIComponent(backUrl);
+    const previewUrl = '/pdf-preview'
+        + '?title=' + encodeURIComponent(title)
+        + '&url='   + encodeURIComponent(url)
+        + '&back='  + encodeURIComponent(backUrl);
     window.location.href = previewUrl;
 };

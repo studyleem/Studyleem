@@ -446,6 +446,23 @@ a {
     line-height: 1.6;
 }
 
+.card-preview-hint {
+    display: block;
+    background: var(--primary);
+    color: white;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    transition: background 0.2s;
+    margin-top: auto;
+}
+
+.material-card:hover .card-preview-hint {
+    background: var(--primary-dark);
+}
+
 /* Tabs */
 .material-type-tabs {
     display: flex;

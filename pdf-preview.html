@@ -28,78 +28,91 @@
     </script>
 
     <style>
-        /* PDF Preview Page specific styles */
-        .preview-page-wrapper {
+        /* ── PDF Preview page: iframe fills space between header and footer ── */
+        body {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        .preview-top-bar {
-            background: var(--bg-light, #f8fafc);
-            border-bottom: 1px solid var(--border, #e2e8f0);
-            padding: 0.75rem 1.5rem;
+        /* Page header banner (matches site style) */
+        .preview-banner {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.25rem 0;
+        }
+
+        .preview-banner-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 1rem;
             flex-wrap: wrap;
-            gap: 0.75rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
-        .preview-top-bar-left {
+        .preview-title-group {
             display: flex;
             align-items: center;
             gap: 1rem;
-            flex: 1;
             min-width: 0;
+            flex: 1;
         }
 
-        .preview-back-btn {
+        .preview-back-link {
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
-            background: var(--primary, #2563eb);
+            background: rgba(255,255,255,0.2);
             color: white;
-            border: none;
+            border: 1px solid rgba(255,255,255,0.35);
             border-radius: 8px;
-            padding: 0.5rem 1rem;
+            padding: 0.45rem 1rem;
             font-size: 0.875rem;
             font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
             white-space: nowrap;
             transition: background 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .preview-back-btn:hover {
-            background: #1d4ed8;
-            color: white;
-        }
-
-        .preview-doc-title {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text, #1f2937);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 400px;
-        }
-
-        .preview-top-bar-right {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
             flex-shrink: 0;
         }
 
-        .preview-download-btn {
+        .preview-back-link:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+        }
+
+        .preview-doc-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Download area */
+        .preview-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .preview-timer-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            min-width: 110px;
+            text-align: right;
+        }
+
+        .preview-timer-label.ready {
+            color: #6ee7b7;
+        }
+
+        #previewDownloadBtn {
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
@@ -107,8 +120,8 @@
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 0.5rem 1.25rem;
-            font-size: 0.875rem;
+            padding: 0.55rem 1.25rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s, opacity 0.2s;
@@ -116,35 +129,23 @@
             white-space: nowrap;
         }
 
-        .preview-download-btn:hover:not(:disabled) {
+        #previewDownloadBtn:hover:not(:disabled) {
             background: #059669;
         }
 
-        .preview-download-btn:disabled {
-            background: #6b7280;
+        #previewDownloadBtn:disabled {
+            background: rgba(255,255,255,0.25);
             cursor: not-allowed;
-            opacity: 0.7;
         }
 
-        .preview-timer-text {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--primary, #2563eb);
-            min-width: 130px;
-            text-align: center;
-        }
-
-        .preview-timer-text.ready {
-            color: #10b981;
-        }
-
-        /* Iframe container - takes remaining viewport height */
-        .preview-iframe-area {
+        /* Iframe wrapper — grows to fill remaining space */
+        .preview-frame-wrapper {
             flex: 1;
             display: flex;
             flex-direction: column;
             position: relative;
-            background: #e5e7eb;
+            background: #d1d5db;
+            min-height: 400px;
         }
 
         #previewFrame {
@@ -152,143 +153,210 @@
             flex: 1;
             border: none;
             display: block;
-            min-height: calc(100vh - 56px);
         }
 
-        .preview-loading-overlay {
+        /* Loading overlay */
+        .preview-loading {
             position: absolute;
             inset: 0;
-            background: #f3f4f6;
+            background: var(--bg-light);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
-            z-index: 10;
-            transition: opacity 0.4s;
+            gap: 1.25rem;
+            z-index: 5;
+            transition: opacity 0.35s;
         }
 
-        .preview-loading-overlay.hidden {
+        .preview-loading.hidden {
             opacity: 0;
             pointer-events: none;
         }
 
-        .preview-spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid #e5e7eb;
-            border-top-color: #2563eb;
+        .preview-loading .spinner {
+            width: 52px;
+            height: 52px;
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 0.9s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .preview-loading-text {
+        .preview-loading p {
             font-family: 'Poppins', sans-serif;
             font-size: 1rem;
-            color: #6b7280;
+            color: var(--text-light);
         }
 
-        .preview-error-box {
-            display: none;
+        /* Error state */
+        .preview-error {
             position: absolute;
             inset: 0;
             background: #fef2f2;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 1rem;
             padding: 2rem;
             text-align: center;
+            z-index: 5;
         }
 
-        .preview-error-box.visible {
+        .preview-error.visible {
             display: flex;
         }
 
-        .preview-error-box h3 {
+        .preview-error h3 {
             font-family: 'Poppins', sans-serif;
             font-size: 1.25rem;
             color: #dc2626;
         }
 
-        .preview-error-box p {
-            font-size: 0.9rem;
-            color: #6b7280;
+        .preview-error p {
+            color: var(--text-light);
             max-width: 380px;
-        }
-
-        .preview-retry-btn {
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.65rem 1.5rem;
             font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            transition: background 0.2s;
         }
 
-        .preview-retry-btn:hover { background: #1d4ed8; }
+        .preview-error .btn {
+            margin-top: 0.5rem;
+        }
 
-        /* Mobile adjustments */
+        /* Footer inside preview stays at bottom */
+        .preview-page-footer {
+            flex-shrink: 0;
+        }
+
+        /* Mobile tweaks */
         @media (max-width: 640px) {
-            .preview-doc-title {
-                max-width: 140px;
-                font-size: 0.85rem;
+            .preview-doc-name {
+                font-size: 0.9rem;
+                max-width: 130px;
             }
 
-            .preview-top-bar {
-                padding: 0.6rem 1rem;
+            .preview-timer-label {
+                display: none;
             }
 
-            #previewFrame {
-                min-height: calc(100vh - 110px);
+            .preview-banner-inner {
+                gap: 0.75rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="preview-page-wrapper">
 
-        <!-- Top bar: back + title + download -->
-        <div class="preview-top-bar">
-            <div class="preview-top-bar-left">
-                <a id="backBtn" href="/home" class="preview-back-btn">← Back</a>
-                <span class="preview-doc-title" id="docTitle">Loading...</span>
-            </div>
-            <div class="preview-top-bar-right">
-                <span class="preview-timer-text" id="timerText"></span>
-                <button class="preview-download-btn" id="downloadBtn" disabled>⬇ Download</button>
+    <!-- ── Site Header ─────────────────────────────────────────────────── -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="/home" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <img src="/logo.png" alt="StudyLeem Logo" style="height: 50px;">
+                        <div class="logo-text">
+                            <span style="color: #1f2937;">Study</span><span style="color: #2563eb;">Leem</span>
+                        </div>
+                    </a>
+                </div>
+                <nav class="nav" aria-label="Main navigation">
+                    <a href="/home" class="nav-link">Home</a>
+                    <a href="/home#classes" class="nav-link">Classes</a>
+                    <a href="/home#subjects" class="nav-link active">Subjects</a>
+                    <a href="/about" class="nav-link">About</a>
+                    <a href="/contact" class="nav-link">Contact</a>
+                    <a href="/terms" class="nav-link">Terms</a>
+                    <a href="/privacy" class="nav-link">Privacy</a>
+                </nav>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </div>
+    </header>
 
-        <!-- PDF Iframe area -->
-        <div class="preview-iframe-area">
-
-            <!-- Loading overlay -->
-            <div class="preview-loading-overlay" id="loadingOverlay">
-                <div class="preview-spinner"></div>
-                <p class="preview-loading-text">Loading PDF preview…</p>
-            </div>
-
-            <!-- Error box -->
-            <div class="preview-error-box" id="errorBox">
-                <h3>⚠️ Preview Unavailable</h3>
-                <p>This PDF could not be previewed in the browser. You can still download it using the button above.</p>
-                <button class="preview-retry-btn" id="retryBtn">🔄 Try Again</button>
-            </div>
-
-            <!-- The main iframe -->
-            <iframe id="previewFrame" title="PDF Preview" allowfullscreen></iframe>
-        </div>
-
+    <!-- ── Mobile Menu ─────────────────────────────────────────────────── -->
+    <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
+        <a href="/home" class="mobile-nav-link">Home</a>
+        <a href="/home#classes" class="mobile-nav-link">Classes</a>
+        <a href="/home#subjects" class="mobile-nav-link active">Subjects</a>
+        <a href="/about" class="mobile-nav-link">About</a>
+        <a href="/contact" class="mobile-nav-link">Contact</a>
+        <a href="/terms" class="mobile-nav-link">Terms</a>
+        <a href="/privacy" class="mobile-nav-link">Privacy</a>
     </div>
+
+    <!-- ── Preview Banner (title + back + download) ────────────────────── -->
+    <div class="preview-banner">
+        <div class="preview-banner-inner">
+            <div class="preview-title-group">
+                <a id="backBtn" href="/home" class="preview-back-link">← Back</a>
+                <span class="preview-doc-name" id="docTitle">Loading…</span>
+            </div>
+            <div class="preview-actions">
+                <span class="preview-timer-label" id="timerLabel"></span>
+                <button id="previewDownloadBtn" disabled>⬇ Download PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── PDF iframe area ─────────────────────────────────────────────── -->
+    <div class="preview-frame-wrapper">
+        <div class="preview-loading" id="loadingOverlay">
+            <div class="spinner"></div>
+            <p>Loading PDF preview…</p>
+        </div>
+
+        <div class="preview-error" id="errorBox">
+            <h3>⚠️ Preview Unavailable</h3>
+            <p>This PDF could not be previewed. You can still download it using the button above, or try again.</p>
+            <button class="btn btn-primary" id="retryBtn">🔄 Try Again</button>
+        </div>
+
+        <iframe id="previewFrame" title="PDF Preview" allowfullscreen></iframe>
+    </div>
+
+    <!-- ── Footer ──────────────────────────────────────────────────────── -->
+    <footer class="footer preview-page-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>StudyLeem</h3>
+                    <p>Your trusted source for free FBISE study materials. Helping students excel in Federal Board examinations.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <div class="footer-links">
+                        <a href="/home">Home</a>
+                        <a href="/home#classes">Classes</a>
+                        <a href="/home#subjects">Subjects</a>
+                        <a href="/contact">Contact</a>
+                        <a href="/admin">Admin Panel</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <div class="footer-links">
+                        <a href="/terms">Terms of Service</a>
+                        <a href="/privacy">Privacy Policy</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <div class="footer-links">
+                        <a href="/class?class=9">Class 9 Materials</a>
+                        <a href="/class?class=10">Class 10 Materials</a>
+                        <a href="/class?class=11">Class 11 Materials</a>
+                        <a href="/class?class=12">Class 12 Materials</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 StudyLeem. All rights reserved. Empowering Federal Board students.</p>
+            </div>
+        </div>
+    </footer>
 
     <!-- Vercel Analytics -->
     <script>
@@ -297,7 +365,24 @@
     <script defer src="/_vercel/insights/script.js"></script>
 
     <script>
-        // ── Helpers ──────────────────────────────────────────────────────────
+        // ── Mobile menu ───────────────────────────────────────────────────
+        (function () {
+            const btn = document.getElementById('mobileMenuBtn');
+            const menu = document.getElementById('mobileMenu');
+            if (btn && menu) {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    menu.classList.toggle('active');
+                };
+                document.addEventListener('click', (e) => {
+                    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                        menu.classList.remove('active');
+                    }
+                });
+            }
+        })();
+
+        // ── Helpers ───────────────────────────────────────────────────────
         function extractGoogleDriveId(url) {
             const patterns = [
                 /\/file\/d\/([a-zA-Z0-9_-]+)/,
@@ -315,42 +400,41 @@
 
         function buildEmbedUrl(pdfUrl) {
             const fileId = extractGoogleDriveId(pdfUrl);
-
             if (fileId) {
-                // Google Drive file — use the native Drive preview (handles large files better)
-                return `https://drive.google.com/file/d/${fileId}/preview`;
+                // Native Drive preview — handles large files reliably
+                return 'https://drive.google.com/file/d/' + fileId + '/preview';
             }
-
-            // Plain .pdf or other direct URL — use Google Docs Viewer
-            return `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
+            // Plain .pdf direct link → Google Docs Viewer
+            return 'https://docs.google.com/viewer?url=' + encodeURIComponent(pdfUrl) + '&embedded=true';
         }
 
-        // ── Download timer ───────────────────────────────────────────────────
+        // ── Download timer ────────────────────────────────────────────────
         let timerInterval = null;
-        let downloadAllowed = false;
+        let downloadReady = false;
         let rawPdfUrl = '';
 
         function startTimer() {
-            const btn = document.getElementById('downloadBtn');
-            const timerText = document.getElementById('timerText');
+            const btn = document.getElementById('previewDownloadBtn');
+            const label = document.getElementById('timerLabel');
             let secs = 15;
-
+            downloadReady = false;
             btn.disabled = true;
-            timerText.textContent = `Wait ${secs}s…`;
-            timerText.className = 'preview-timer-text';
+            btn.textContent = '⬇ Download PDF';
+            label.textContent = 'Please wait ' + secs + 's…';
+            label.className = 'preview-timer-label';
 
             if (timerInterval) clearInterval(timerInterval);
-
-            timerInterval = setInterval(() => {
+            timerInterval = setInterval(function () {
                 secs--;
                 if (secs > 0) {
-                    timerText.textContent = `Wait ${secs}s…`;
+                    label.textContent = 'Please wait ' + secs + 's…';
                 } else {
                     clearInterval(timerInterval);
-                    downloadAllowed = true;
+                    timerInterval = null;
+                    downloadReady = true;
                     btn.disabled = false;
-                    timerText.textContent = '✅ Ready!';
-                    timerText.className = 'preview-timer-text ready';
+                    label.textContent = '✅ Ready to download!';
+                    label.className = 'preview-timer-label ready';
                 }
             }, 1000);
         }
@@ -359,7 +443,7 @@
             if (!rawPdfUrl) return;
             const fileId = extractGoogleDriveId(rawPdfUrl);
             const url = fileId
-                ? `https://drive.google.com/uc?export=download&id=${fileId}`
+                ? 'https://drive.google.com/uc?export=download&id=' + fileId
                 : rawPdfUrl;
 
             const a = document.createElement('a');
@@ -370,85 +454,80 @@
             a.click();
             document.body.removeChild(a);
 
-            // Reset for re-download
-            downloadAllowed = false;
-            document.getElementById('downloadBtn').disabled = true;
-            document.getElementById('timerText').textContent = '';
-            document.getElementById('timerText').className = 'preview-timer-text';
+            // Restart timer for re-download
             startTimer();
         }
 
-        document.getElementById('downloadBtn').addEventListener('click', () => {
-            if (downloadAllowed) doDownload();
+        document.getElementById('previewDownloadBtn').addEventListener('click', function () {
+            if (downloadReady) doDownload();
         });
 
-        // ── Load PDF ─────────────────────────────────────────────────────────
-        let loadTimeout = null;
+        // ── Load PDF ──────────────────────────────────────────────────────
+        var loadTimeout = null;
 
         function loadPdf(url) {
-            const frame = document.getElementById('previewFrame');
-            const overlay = document.getElementById('loadingOverlay');
-            const errorBox = document.getElementById('errorBox');
+            var frame = document.getElementById('previewFrame');
+            var overlay = document.getElementById('loadingOverlay');
+            var errorBox = document.getElementById('errorBox');
 
             overlay.classList.remove('hidden');
             errorBox.classList.remove('visible');
             frame.src = '';
 
-            const embedUrl = buildEmbedUrl(url);
-
-            // Give Google's viewer up to 25s to load before showing error
             if (loadTimeout) clearTimeout(loadTimeout);
-            loadTimeout = setTimeout(() => {
-                // If still loading after timeout, show error box
+
+            // Timeout: if iframe doesn't fire onload in 25s, show error
+            loadTimeout = setTimeout(function () {
                 if (!overlay.classList.contains('hidden')) {
                     overlay.classList.add('hidden');
                     errorBox.classList.add('visible');
                 }
             }, 25000);
 
-            frame.onload = () => {
+            frame.onload = function () {
                 clearTimeout(loadTimeout);
                 overlay.classList.add('hidden');
                 errorBox.classList.remove('visible');
             };
 
-            frame.onerror = () => {
+            frame.onerror = function () {
                 clearTimeout(loadTimeout);
                 overlay.classList.add('hidden');
                 errorBox.classList.add('visible');
             };
 
-            frame.src = embedUrl;
+            frame.src = buildEmbedUrl(url);
         }
 
-        document.getElementById('retryBtn').addEventListener('click', () => {
+        document.getElementById('retryBtn').addEventListener('click', function () {
             if (rawPdfUrl) loadPdf(rawPdfUrl);
         });
 
-        // ── Init ─────────────────────────────────────────────────────────────
+        // ── Init ──────────────────────────────────────────────────────────
         (function init() {
-            const params = new URLSearchParams(window.location.search);
-            const title = params.get('title') || 'PDF Preview';
-            const url = params.get('url');
-            const back = params.get('back') || '/home';
+            var params = new URLSearchParams(window.location.search);
+            var title = params.get('title') || 'PDF Preview';
+            var url   = params.get('url');
+            var back  = params.get('back') || '/home';
 
-            // Set page title and document title
-            document.title = `${title} - StudyLeem`;
-            document.getElementById('pageTitle').textContent = `${title} - StudyLeem`;
+            document.title = title + ' - StudyLeem';
+            document.getElementById('pageTitle').textContent = title + ' - StudyLeem';
             document.getElementById('docTitle').textContent = title;
             document.getElementById('backBtn').href = back;
 
             if (!url) {
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                document.getElementById('errorBox').classList.add('visible');
-                document.querySelector('#errorBox p').textContent =
+                var overlay = document.getElementById('loadingOverlay');
+                overlay.classList.add('hidden');
+                var errorBox = document.getElementById('errorBox');
+                errorBox.classList.add('visible');
+                errorBox.querySelector('p').textContent =
                     'No PDF URL was provided. Please go back and try again.';
                 return;
             }
 
             rawPdfUrl = url;
             loadPdf(url);
-            startTimer();
+            startTimer();   // timer starts when page loads, NOT on download click
         })();
     </script>
 </body>
