@@ -3,9 +3,9 @@
     --primary: #2563eb;
     --primary-dark: #1e40af;
     --primary-light: #3b82f6;
-    --accent: #f97316;       /* StudyLeem orange */
-    --accent-dark: #ea6900;
-    --accent-light: #fb923c;
+    --accent: #2563eb;       /* StudyLeem blue accent */
+    --accent-dark: #1e40af;
+    --accent-light: #3b82f6;
     --text: #1f2937;
     --text-light: #6b7280;
     --text-lighter: #9ca3af;
@@ -264,7 +264,7 @@ a {
     font-weight: 700;
     font-family: 'Poppins', sans-serif;
     line-height: 1;
-    color: var(--accent-light, #fb923c);
+    color: var(--accent-light, #3b82f6);
 }
 
 .stat-label {
@@ -622,7 +622,7 @@ a {
 }
 
 .footer-logo-leem {
-    color: var(--accent);
+    color: #f97316;
 }
 
 .footer-tagline {
@@ -681,7 +681,7 @@ a {
 }
 
 .footer-list a:hover {
-    color: var(--accent);
+    color: #f97316;
     transform: translateX(3px);
 }
 
@@ -715,7 +715,7 @@ a {
 }
 
 .footer-bottom-right a:hover {
-    color: var(--accent);
+    color: #f97316;
 }
 
 .footer-bottom-right span {
@@ -1807,9 +1807,9 @@ a {
     color: var(--primary);
 }
 
-/* Logo: "Study" = dark, "Leem" = accent orange */
+/* Logo: "Study" = blue, "Leem" = orange */
 .logo-leem {
-    color: var(--accent) !important;
+    color: #f97316 !important;
 }
 
 /* Hero wave connector to classes section */
@@ -1849,7 +1849,7 @@ a {
 }
 .type-switch-btn:not(.active):hover {
     border-color: var(--accent);
-    color: var(--accent);
+    color: #f97316;
 }
 
 /* Subject cards accent hover */
@@ -1857,7 +1857,7 @@ a {
     border-color: var(--accent);
 }
 .subject-card:hover h3 {
-    color: var(--accent);
+    color: #f97316;
 }
 
 /* Class card accent hover */

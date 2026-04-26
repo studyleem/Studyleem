@@ -90,24 +90,55 @@ const DB = {
 
     async getBySubjectSlug(classNum, subjectSlug, type) {
         try {
+            // Primary: query by stored subjectSlug field
             let q = db.collection('materials')
                 .where('class', '==', String(classNum))
                 .where('subjectSlug', '==', subjectSlug);
             if (type && type !== 'all') q = q.where('type', '==', type);
-            const snap = await q.get();
-            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            let snap = await q.get();
+            let results = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+            // Fallback: docs uploaded manually may not have subjectSlug field.
+            // Query by class+type and filter client-side by slugifying subject name.
+            if (!results.length) {
+                let fq = db.collection('materials').where('class', '==', String(classNum));
+                if (type && type !== 'all') fq = fq.where('type', '==', type);
+                const fsnap = await fq.get();
+                results = fsnap.docs
+                    .map(d => ({ id: d.id, ...d.data() }))
+                    .filter(d => toSlug(d.subject || '') === subjectSlug);
+            }
+            return results;
         } catch (e) { console.error('❌ GetBySlug:', e); return []; }
     },
 
     async getByChapterSlug(classNum, subjectSlug, chapterSlug, type) {
         try {
+            // Primary: query by stored slugs
             let q = db.collection('materials')
                 .where('class', '==', String(classNum))
                 .where('subjectSlug', '==', subjectSlug)
                 .where('chapterSlug', '==', chapterSlug);
             if (type && type !== 'all') q = q.where('type', '==', type);
-            const snap = await q.get();
-            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            let snap = await q.get();
+            let results = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+            // Fallback: manually-added docs lack slug fields.
+            // Derive chapter number from slug like "chapter-21" → 21.
+            if (!results.length) {
+                let fq = db.collection('materials').where('class', '==', String(classNum));
+                if (type && type !== 'all') fq = fq.where('type', '==', type);
+                const fsnap = await fq.get();
+                const all = fsnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                const chNumMatch = chapterSlug.match(/chapter-(\d+)/);
+                const chNum = chNumMatch ? Number(chNumMatch[1]) : null;
+                results = all.filter(d => {
+                    if (toSlug(d.subject || '') !== subjectSlug) return false;
+                    if (chNum !== null) return Number(d.chapterNumber) === chNum;
+                    return toSlug(d.chapterTitle || '') === chapterSlug;
+                });
+            }
+            return results;
         } catch (e) { console.error('❌ GetByChapterSlug:', e); return []; }
     },
 
