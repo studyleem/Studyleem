@@ -1,4 +1,4 @@
-/* ── fbise-viewer.js: /fbise/notes/:class/:subject/:chapter ── */
+/* ── fbise-viewer.js: /fbise/notes/:class/:subject/:chapter  or  /fbise/books/:class/:subject/book-:id ── */
 
 (function () {
   'use strict';
@@ -6,6 +6,7 @@
   function parsePath() {
     const parts = window.location.pathname.split('/').filter(Boolean);
     // ['fbise', 'notes', '12', 'physics', 'chapter-1']
+    // ['fbise', 'books', '12', 'chemistry', 'book-DOCID']
     return {
       type:        parts[1] || 'notes',
       cls:         parts[2] || '12',
@@ -16,15 +17,10 @@
 
   function makePdfEmbedUrl(rawUrl) {
     if (!rawUrl) return null;
-    // Google Drive: convert share link to Google Docs Viewer / iframe embed
-    // Pattern: https://drive.google.com/file/d/FILE_ID/view
     const driveMatch = rawUrl.match(/\/file\/d\/([^/]+)/);
     if (driveMatch) {
-      const id = driveMatch[1];
-      // Use Google Drive preview (works for large files, no download required)
-      return `https://drive.google.com/file/d/${id}/preview`;
+      return `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
     }
-    // Google Docs viewer for other URLs
     if (rawUrl.endsWith('.pdf') || rawUrl.includes('pdf')) {
       return `https://docs.google.com/viewer?url=${encodeURIComponent(rawUrl)}&embedded=true`;
     }
@@ -43,11 +39,11 @@
     const { type, cls, subjectSlug, chapterSlug } = parsePath();
     const subjectName = data.subject || subjectSlug.replace(/-/g, ' ');
     const title = `${data.title} – FBISE Class ${cls} ${subjectName} | StudyLeem`;
-    const desc  = `View and download: ${data.title}. Free FBISE ${subjectName} notes for Class ${cls} Federal Board Pakistan.`;
+    const desc  = `View and download: ${data.title}. Free FBISE ${subjectName} ${type === 'books' ? 'textbook' : 'notes'} for Class ${cls} Federal Board Pakistan.`;
 
     document.getElementById('pageTitle').textContent  = title;
     document.getElementById('pageDesc').content       = desc;
-    document.getElementById('pageKeywords').content   = `FBISE ${subjectName} notes class ${cls}, ${data.title}, Federal Board Pakistan PDF`;
+    document.getElementById('pageKeywords').content   = `FBISE ${subjectName} ${type === 'books' ? 'book' : 'notes'} class ${cls}, ${data.title}, Federal Board Pakistan PDF`;
     document.getElementById('pageCanonical').href     = `https://studyleem.vercel.app/fbise/${type}/${cls}/${subjectSlug}/${chapterSlug}`;
     document.getElementById('docTitle').textContent   = data.title;
   }
@@ -56,70 +52,66 @@
     const { type, cls, subjectSlug, chapterSlug } = parsePath();
 
     // Set back link
-    const backLink = document.getElementById('backLink');
-    backLink.href  = `/fbise/${type}/${cls}/${subjectSlug}`;
+    document.getElementById('backLink').href = `/fbise/${type}/${cls}/${subjectSlug}`;
 
-    // Fetch data from Firestore
     let pdfUrl = null;
-    let title   = '';
+    let itemData = null;
 
     try {
-      const items = await DB.getByChapterSlug(cls, subjectSlug, chapterSlug, type);
-      if (items && items.length > 0) {
-        const item = items[0];
-        pdfUrl = item.pdfLink;
-        title  = item.title;
-        setMeta(item);
-        document.getElementById('docTitle').textContent = item.title;
+      // ── Books: slug is "book-DOCID" so fetch directly by document ID ──
+      if (type === 'books' && chapterSlug.startsWith('book-')) {
+        const docId = chapterSlug.replace(/^book-/, '');
+        const snap  = await db.collection('materials').doc(docId).get();
+        if (snap.exists) {
+          itemData = { id: snap.id, ...snap.data() };
+        }
       } else {
-        // Fallback: get from URL params (legacy support)
+        // ── Notes: fetch by chapterSlug as before ──
+        const items = await DB.getByChapterSlug(cls, subjectSlug, chapterSlug, type);
+        if (items && items.length > 0) {
+          itemData = items[0];
+        }
+      }
+
+      if (itemData) {
+        pdfUrl = itemData.pdfLink;
+        setMeta(itemData);
+        document.getElementById('docTitle').textContent = itemData.title;
+      } else {
+        // Legacy query-param fallback
         const p = new URLSearchParams(window.location.search);
         pdfUrl  = p.get('url');
-        title   = p.get('title') || chapterSlug;
-        document.getElementById('docTitle').textContent = title;
-        document.getElementById('pageTitle').textContent = `${title} – StudyLeem`;
+        const fallbackTitle = p.get('title') || chapterSlug;
+        document.getElementById('docTitle').textContent = fallbackTitle;
+        document.getElementById('pageTitle').textContent = `${fallbackTitle} – StudyLeem`;
       }
     } catch (err) {
       console.error('Firestore fetch error:', err);
-      // Fallback to query params
       const p = new URLSearchParams(window.location.search);
       pdfUrl  = p.get('url');
-      title   = p.get('title') || chapterSlug;
-      document.getElementById('docTitle').textContent = title;
+      const fallbackTitle = p.get('title') || chapterSlug;
+      document.getElementById('docTitle').textContent = fallbackTitle;
     }
 
-    if (!pdfUrl) {
-      showError();
-      return;
-    }
+    if (!pdfUrl) { showError(); return; }
 
-    // Set download + open buttons
-    document.getElementById('downloadBtn').href = makeDownloadUrl(pdfUrl);
-    document.getElementById('openTabBtn').href  = pdfUrl;
+    document.getElementById('downloadBtn').href  = makeDownloadUrl(pdfUrl);
+    document.getElementById('openTabBtn').href   = pdfUrl;
     document.getElementById('fallbackOpen').href = pdfUrl;
 
-    // Embed PDF
     loadPdf(pdfUrl);
   }
 
   function loadPdf(rawUrl) {
-    const embedUrl   = makePdfEmbedUrl(rawUrl);
-    const iframe     = document.getElementById('pdfIframe');
-    const loading    = document.getElementById('pdfLoading');
-    const errorDiv   = document.getElementById('pdfError');
+    const embedUrl = makePdfEmbedUrl(rawUrl);
+    const iframe   = document.getElementById('pdfIframe');
+    const loading  = document.getElementById('pdfLoading');
+    const errorDiv = document.getElementById('pdfError');
 
     if (!embedUrl) { showError(); return; }
 
     iframe.src = embedUrl;
 
-    // Show iframe once loaded
-    iframe.onload = () => {
-      loading.style.display = 'none';
-      errorDiv.style.display = 'none';
-      iframe.style.display   = 'block';
-    };
-
-    // Timeout fallback: if iframe doesn't load in 12 seconds show error
     const timer = setTimeout(() => {
       if (iframe.style.display === 'none') {
         loading.style.display = 'none';

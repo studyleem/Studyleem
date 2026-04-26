@@ -1,4 +1,4 @@
-/* ── fbise-chapters.js: /fbise/notes/:class/:subject ── */
+/* ── fbise-chapters.js: /fbise/notes/:class/:subject or /fbise/books/:class/:subject ── */
 
 (function () {
   'use strict';
@@ -16,12 +16,13 @@
     if (btn && menu) {
       btn.onclick = e => { e.stopPropagation(); menu.classList.toggle('active'); };
       document.onclick = e => { if (!menu.contains(e.target) && !btn.contains(e.target)) menu.classList.remove('active'); };
+      menu.querySelectorAll('a').forEach(a => a.onclick = () => menu.classList.remove('active'));
     }
   }
 
   function parsePath() {
     const parts = window.location.pathname.split('/').filter(Boolean);
-    // ['fbise', 'notes', '12', 'physics']
+    // ['fbise', 'notes', '12', 'physics']  or  ['fbise', 'books', '12', 'chemistry']
     const type        = parts[1] || 'notes';
     const cls         = parts[2] || '12';
     const subjectSlug = parts[3] || '';
@@ -38,16 +39,18 @@
   function setMeta(type, cls, subjectSlug, subjectName) {
     const typeLabel = type === 'books' ? 'Books' : 'Notes';
     const clsLabel  = classLabels[cls] || `Class ${cls}`;
-    const subLabel  = subjectName || subjectSlug;
+    const subLabel  = subjectName || subjectSlug.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
     const title = `FBISE ${subLabel} ${typeLabel} ${clsLabel} – Chapter Wise PDF | StudyLeem`;
     const desc  = `Free FBISE ${subLabel} ${typeLabel.toLowerCase()} for ${clsLabel} Federal Board Pakistan. Download chapter-wise PDF notes.`;
 
     document.getElementById('pageTitle').textContent    = title;
     document.getElementById('pageDesc').content         = desc;
-    document.getElementById('pageKeywords').content     = `FBISE ${subLabel} notes class ${cls}, ${subLabel} chapter wise notes FBISE, Federal Board ${cls} ${subLabel} PDF`;
+    document.getElementById('pageKeywords').content     = `FBISE ${subLabel} notes class ${cls}, ${subLabel} chapter wise notes FBISE, Federal Board ${cls} ${subLabel} PDF, free ${subLabel} notes Pakistan`;
     document.getElementById('pageCanonical').href       = `https://studyleem.vercel.app/fbise/${type}/${cls}/${subjectSlug}`;
     document.getElementById('pageH1').textContent       = `${subLabel} – ${typeLabel} (${clsLabel})`;
-    document.getElementById('pageSubtitle').textContent = `FBISE Federal Board chapter-wise ${typeLabel.toLowerCase()} in PDF`;
+    document.getElementById('pageSubtitle').textContent = type === 'books'
+      ? `FBISE Federal Board complete textbook in PDF`
+      : `FBISE Federal Board chapter-wise notes in PDF`;
     document.getElementById('breadSubject').textContent = subLabel;
 
     const classLink = document.getElementById('breadClassLink');
@@ -64,7 +67,6 @@
 
     const { type, cls, subjectSlug } = parsePath();
 
-    // Group by contentType if mixed (chapters + exercises)
     const hasExercise = items.some(m => m.contentType === 'exercise');
     const hasChapter  = items.some(m => !m.contentType || m.contentType === 'chapter');
 
@@ -77,7 +79,7 @@
     if (activeFilter === 'chapter')  display = items.filter(m => !m.contentType || m.contentType === 'chapter');
     if (activeFilter === 'exercise') display = items.filter(m => m.contentType === 'exercise');
 
-    // Sort: chapters by chapterNumber, exercises by chapterNumber then exerciseNumber
+    // Sort: by chapterNumber then exerciseNumber
     display.sort((a, b) => {
       const nA = Number(a.chapterNumber) || 0;
       const nB = Number(b.chapterNumber) || 0;
@@ -85,6 +87,25 @@
       return (Number(a.exerciseNumber) || 0) - (Number(b.exerciseNumber) || 0);
     });
 
+    // ── BOOKS: show as single clickable card (whole PDF), not chapter list ──
+    if (type === 'books') {
+      grid.innerHTML = display.map(m => {
+        const href = `/fbise/books/${cls}/${subjectSlug}/book-${m.id}`;
+        return `
+          <a href="${href}" class="chapter-item book-item" aria-label="${escHtml(m.title)}">
+            <div class="chapter-num">📚 Full Textbook</div>
+            <div class="chapter-info">
+              <h3 class="chapter-title">${escHtml(m.title)}</h3>
+              ${m.description ? `<p class="chapter-desc">${escHtml(m.description.substring(0,120))}${m.description.length>120?'…':''}</p>` : ''}
+            </div>
+            <div class="chapter-arrow">→</div>
+          </a>
+        `;
+      }).join('');
+      return;
+    }
+
+    // ── NOTES: chapter-by-chapter list ──
     grid.innerHTML = display.map(m => {
       const slug  = m.chapterSlug || (m.contentType === 'exercise'
         ? `exercise-${m.chapterNumber}${m.exerciseNumber ? '-' + m.exerciseNumber : ''}`
@@ -123,12 +144,12 @@
   async function loadChapters(type, cls, subjectSlug) {
     const grid = document.getElementById('chaptersGrid');
     try {
-      grid.innerHTML = '<div class="loading">Loading chapters...</div>';
+      grid.innerHTML = '<div class="loading">Loading...</div>';
+      // For books, fetch without type filter first (books may be stored as type='books')
       allItems = await DB.getBySubjectSlug(cls, subjectSlug, type);
 
       if (!allItems.length) {
-        // fallback: try to find the subject by name if no slug match
-        grid.innerHTML = '<p class="loading">No chapters uploaded yet. Check back soon!</p>';
+        grid.innerHTML = `<p class="loading">No ${type === 'books' ? 'books' : 'chapters'} uploaded yet for this subject. Check back soon!</p>`;
         return;
       }
 
@@ -136,11 +157,13 @@
       const subjectName = allItems[0].subject || subjectSlug;
       setMeta(type, cls, subjectSlug, subjectName);
 
-      const hasExercise = allItems.some(m => m.contentType === 'exercise');
-      const hasChapter  = allItems.some(m => !m.contentType || m.contentType === 'chapter');
-      if (hasExercise && hasChapter) {
-        document.getElementById('filterTabs').style.display = 'flex';
-        setupFilter(allItems);
+      if (type === 'notes') {
+        const hasExercise = allItems.some(m => m.contentType === 'exercise');
+        const hasChapter  = allItems.some(m => !m.contentType || m.contentType === 'chapter');
+        if (hasExercise && hasChapter) {
+          document.getElementById('filterTabs').style.display = 'flex';
+          setupFilter(allItems);
+        }
       }
 
       renderItems(allItems);

@@ -3,6 +3,9 @@
     --primary: #2563eb;
     --primary-dark: #1e40af;
     --primary-light: #3b82f6;
+    --accent: #f97316;       /* StudyLeem orange */
+    --accent-dark: #ea6900;
+    --accent-light: #fb923c;
     --text: #1f2937;
     --text-light: #6b7280;
     --text-lighter: #9ca3af;
@@ -157,43 +160,59 @@ a {
     left: 0;
     right: 0;
     background: var(--bg);
-    box-shadow: 0 4px 12px var(--shadow-md);
+    box-shadow: 0 8px 24px var(--shadow-md);
     z-index: 99;
-    padding: 1rem 0;
+    padding: 0.5rem 0 1rem;
     max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
+    overflow-y: auto;
+    transition: max-height 0.35s ease;
+    border-top: 3px solid var(--primary);
 }
 
 .mobile-menu.active {
     display: block;
-    max-height: 500px;
+    max-height: 85vh;
 }
 
 .mobile-nav-link {
     display: block;
-    padding: 1rem 1.5rem;
+    padding: 0.65rem 1.5rem;
     color: var(--text);
     font-weight: 500;
-    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
     border-left: 3px solid transparent;
+}
+
+.mobile-nav-link[href^="·"],
+.mobile-nav-link:not([href="/"]):not([href="/fbise"]):not([href="/about"]):not([href="/contact"]):not([href="/privacy"]):not([href="/terms"]) {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    padding-left: 2.5rem;
 }
 
 .mobile-nav-link:hover,
 .mobile-nav-link.active {
     background: var(--bg-light);
     color: var(--primary);
-    border-left-color: var(--primary);
+    border-left-color: var(--accent);
+}
+
+.mobile-menu-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0.5rem 1.5rem;
 }
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    background: linear-gradient(135deg, #1e40af 0%, var(--primary) 60%, #1d4ed8 100%);
     color: white;
-    padding: 5rem 0;
+    padding: 4.5rem 0 0;
     text-align: center;
     position: relative;
     overflow: hidden;
+    margin-bottom: 0;
 }
 
 .hero::before {
@@ -232,6 +251,7 @@ a {
     justify-content: center;
     gap: 4rem;
     margin-top: 3rem;
+    padding-bottom: 3rem;
 }
 
 .stat {
@@ -244,6 +264,7 @@ a {
     font-weight: 700;
     font-family: 'Poppins', sans-serif;
     line-height: 1;
+    color: var(--accent-light, #fb923c);
 }
 
 .stat-label {
@@ -255,6 +276,11 @@ a {
 /* Sections */
 .section {
     padding: 4rem 0;
+}
+
+.classes-section {
+    padding-top: 0;
+    margin-top: 0;
 }
 
 .section-title {
@@ -558,64 +584,142 @@ a {
     width: 100%;
 }
 
-/* Footer - Sticky to Bottom */
+/* ═══════════════════════════════════════════════
+   FOOTER - Professional
+═══════════════════════════════════════════════ */
 .footer {
     flex-shrink: 0;
-    background: var(--text);
-    color: white;
-    padding: 3rem 0 1.5rem;
     margin-top: auto;
+    color: white;
+}
+
+.footer-inner {
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    border-top: 4px solid var(--accent);
+    padding: 3.5rem 0 0;
 }
 
 .footer-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 2.5rem;
-    margin-bottom: 2rem;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
 }
 
-.footer-section h3,
-.footer-section h4 {
-    margin-bottom: 1.25rem;
+/* Brand column */
+.footer-brand {}
+
+.footer-logo {
     font-family: 'Poppins', sans-serif;
-    font-size: 1.125rem;
-}
-
-.footer-section p {
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.6;
-}
-
-.footer-section ul {
-    list-style: none;
-}
-
-.footer-section li {
+    font-size: 1.75rem;
+    font-weight: 800;
     margin-bottom: 0.75rem;
+    letter-spacing: -0.5px;
 }
 
-.footer-section a {
-    color: rgba(255, 255, 255, 0.8);
-    transition: color 0.3s ease;
-    display: inline-block;
+.footer-logo-study {
+    color: #fff;
 }
 
-.footer-section a:hover {
-    color: white;
+.footer-logo-leem {
+    color: var(--accent);
+}
+
+.footer-tagline {
+    color: rgba(255,255,255,0.65);
+    font-size: 0.875rem;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+    max-width: 280px;
+}
+
+.footer-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.footer-badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8);
+    padding: 0.25rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Link columns */
+.footer-col {}
+
+.footer-col-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 1.25rem;
+}
+
+.footer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.footer-list a {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.footer-list a:hover {
+    color: var(--accent);
     transform: translateX(3px);
 }
 
-.footer-links {
+/* Bottom bar */
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 1.25rem 0;
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
 }
 
-.footer-bottom {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.7);
+.footer-bottom-left p {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.footer-bottom-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.footer-bottom-right a {
+    color: rgba(255,255,255,0.5);
+    transition: color 0.2s;
+}
+
+.footer-bottom-right a:hover {
+    color: var(--accent);
+}
+
+.footer-bottom-right span {
+    color: rgba(255,255,255,0.25);
 }
 
 /* Page Header */
@@ -1255,8 +1359,18 @@ a {
     }
     
     .footer-content {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
         gap: 2rem;
+    }
+    
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
     }
 }
 
@@ -1675,4 +1789,91 @@ a {
 @media (max-width: 480px) {
   .features-grid { grid-template-columns: 1fr; }
   .chapter-item  { flex-wrap: wrap; }
+}
+
+/* ── Book item card in chapters list ── */
+.book-item {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border: 2px solid #bfdbfe;
+}
+.book-item:hover {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+}
+
+/* ── Accent / orange highlights ── */
+.nav-link.active,
+.nav-link:hover {
+    color: var(--primary);
+}
+
+/* Logo: "Study" = dark, "Leem" = accent orange */
+.logo-leem {
+    color: var(--accent) !important;
+}
+
+/* Hero wave connector to classes section */
+.hero-wave {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    margin-bottom: -2px;
+    background: linear-gradient(135deg, #1e40af 0%, var(--primary) 60%, #1d4ed8 100%);
+}
+.hero-wave svg {
+    display: block;
+    width: 100%;
+}
+
+/* Classes section flush with hero */
+.classes-section {
+    padding-top: 2.5rem !important;
+}
+
+/* stat numbers accent */
+.hero .stat-number {
+    color: #fbbf24;
+}
+
+/* Page header accent bar */
+.page-header {
+    border-bottom: 4px solid var(--accent);
+}
+
+/* Type switch buttons accent */
+.type-switch-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+.type-switch-btn:not(.active):hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Subject cards accent hover */
+.subject-card:hover {
+    border-color: var(--accent);
+}
+.subject-card:hover h3 {
+    color: var(--accent);
+}
+
+/* Class card accent hover */
+.class-card:hover {
+    border-color: var(--accent);
+}
+
+/* Footer full-width on mobile */
+@media (max-width: 480px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+    .footer-brand {
+        grid-column: 1;
+    }
+    .footer-logo {
+        font-size: 1.5rem;
+    }
 }
