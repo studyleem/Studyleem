@@ -17,6 +17,8 @@
     { "source": "/class",                              "destination": "/class.html" },
     { "source": "/subject",                            "destination": "/subject.html" },
     { "source": "/pdf-preview",                        "destination": "/pdf-preview.html" }
+    { "source": "/leemai", "destination": "/leemai.html" }
+
   ],
   "headers": [
     {
