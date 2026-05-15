@@ -1,24 +1,23 @@
 {
   "rewrites": [
-    { "source": "/",                                   "destination": "/home.html" },
-    { "source": "/home",                               "destination": "/home.html" },
-    { "source": "/about",                              "destination": "/about.html" },
-    { "source": "/privacy",                            "destination": "/privacy.html" },
-    { "source": "/terms",                              "destination": "/terms.html" },
-    { "source": "/contact",                            "destination": "/contact.html" },
-    { "source": "/admin-secure-panel-sl786",           "destination": "/admin.html" },
-    { "source": "/fbise",                              "destination": "/fbise.html" },
-    { "source": "/fbise/notes/:class",                 "destination": "/fbise-subject.html" },
-    { "source": "/fbise/books/:class",                 "destination": "/fbise-subject.html" },
-    { "source": "/fbise/notes/:class/:subject",        "destination": "/fbise-chapters.html" },
-    { "source": "/fbise/books/:class/:subject",        "destination": "/fbise-chapters.html" },
+    { "source": "/",                                    "destination": "/home.html" },
+    { "source": "/home",                                "destination": "/home.html" },
+    { "source": "/about",                               "destination": "/about.html" },
+    { "source": "/privacy",                             "destination": "/privacy.html" },
+    { "source": "/terms",                               "destination": "/terms.html" },
+    { "source": "/contact",                             "destination": "/contact.html" },
+    { "source": "/admin-secure-panel-sl786",            "destination": "/admin.html" },
+    { "source": "/fbise",                               "destination": "/fbise.html" },
+    { "source": "/fbise/notes/:class",                  "destination": "/fbise-subject.html" },
+    { "source": "/fbise/books/:class",                  "destination": "/fbise-subject.html" },
+    { "source": "/fbise/notes/:class/:subject",         "destination": "/fbise-chapters.html" },
+    { "source": "/fbise/books/:class/:subject",         "destination": "/fbise-chapters.html" },
     { "source": "/fbise/notes/:class/:subject/:chapter","destination": "/fbise-viewer.html" },
     { "source": "/fbise/books/:class/:subject/:chapter","destination": "/fbise-viewer.html" },
-    { "source": "/class",                              "destination": "/class.html" },
-    { "source": "/subject",                            "destination": "/subject.html" },
-    { "source": "/pdf-preview",                        "destination": "/pdf-preview.html" }
-    { "source": "/leemai", "destination": "/leemai.html" }
-
+    { "source": "/class",                               "destination": "/class.html" },
+    { "source": "/subject",                             "destination": "/subject.html" },
+    { "source": "/pdf-preview",                         "destination": "/pdf-preview.html" },
+    { "source": "/leemai",                              "destination": "/leemai.html" }
   ],
   "headers": [
     {
@@ -38,11 +37,5 @@
       "source": "/admin-secure-panel-sl786",
       "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
     }
-  ]
-}
-{
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/leemai", "destination": "/leemai.html" }
   ]
 }
