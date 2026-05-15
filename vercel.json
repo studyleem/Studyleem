@@ -40,3 +40,9 @@
     }
   ]
 }
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/leemai", "destination": "/leemai.html" }
+  ]
+}
