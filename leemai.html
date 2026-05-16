@@ -637,8 +637,9 @@
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────────
-const API_URL = "leemai-production.up.railway.app";
-const API_KEY = "leemai_studyleem_2025";
+const LEEMAI_API = "https://leemai-production.up.railway.app";
+// Warmup: start loading model as soon as page opens
+fetch(LEEMAI_API + '/api/warmup').catch(() => {});
 
 // ── Mobile sidebar toggle ─────────────────────────────────────────────────────
 const sidebarToggleBar = document.getElementById('sidebarToggleBar');
@@ -698,22 +699,23 @@ async function sendMessage() {
   const typingId = appendTyping();
 
   try {
-    const res = await fetch(API_URL, {
+    const res = await fetch(LEEMAI_API + '/api/ask', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY
-      },
-      body: JSON.stringify({ query })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: query, top_k: 4 })
     });
 
     const data = await res.json();
     removeTyping(typingId);
 
-    if (data.error) {
-      appendMessage('ai', '⚠️ ' + data.error);
+    if (!res.ok) {
+      appendMessage('ai', '⚠️ ' + (data.detail || 'Something went wrong. Please try again.'));
+    } else if (data.fallback && !data.model_ready) {
+      appendMessage('ai', '⏳ LeemAI is still waking up (first load takes ~30s). ' + data.answer);
     } else {
-      appendMessage('ai', data.answer, data.confidence, data.topic);
+      // confidence is 0–1 from backend, convert to 0–100
+      const confPct = data.confidence ? Math.round(data.confidence * 100) : 0;
+      appendMessage('ai', data.answer, confPct, data.confidence_label);
     }
 
   } catch (err) {
